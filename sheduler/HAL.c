@@ -4,11 +4,11 @@ inline void InitAll(void)
 {
 
 //InitUSART
-UBRRL = LO(bauddivider);
-UBRRH = HI(bauddivider);
-UCSRA = 0;
-UCSRB = 1<<RXEN|1<<TXEN|0<<RXCIE|0<<TXCIE|0<<UDRIE;
-UCSRC = 1<<URSEL|1<<UCSZ0|1<<UCSZ1;
+UBRR0L = LO(bauddivider);
+UBRR0H = HI(bauddivider);
+UCSR0A = 0;
+UCSR0B = 1<<RXEN0|1<<TXEN0|0<<RXCIE0|0<<TXCIE0|0<<UDRIE0;
+UCSR0C = 1<<UCSZ00|1<<UCSZ01;   //  1<<URSEL|
 
 //InitPort
 LED_DDR = 0xFF;

@@ -16,9 +16,6 @@
 
 #define INLINE __attribute__((always_inline))
 
-
-
-
 //System Timer Config
 #define Prescaler	  		64
 #define	TimerDivider  		(F_CPU/Prescaler/1000)		// 1 mS
