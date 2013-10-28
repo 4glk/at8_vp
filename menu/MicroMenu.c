@@ -1,12 +1,4 @@
-/**
-              MICRO-MENU V2
 
-          (C) Dean Camera, 2012
-        www.fourwalledcubicle.com
-     dean [at] fourwalledcubicle.com
-
-        Royalty-free for all uses.
-	                                  */
 
 #include "MicroMenu.h"
 

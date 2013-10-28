@@ -29,6 +29,13 @@ void nlcd_Init(void)
 
 	RST_LCD_SET;
 
+		nlcd_SendByte(CMD_LCD_MODE,0xE2); // *** SOFTWARE RESET
+
+	nlcd_SendByte(CMD_LCD_MODE,0x3A); // *** Use internal oscillator
+	nlcd_SendByte(CMD_LCD_MODE,0xEF); // *** FRAME FREQUENCY:
+	nlcd_SendByte(CMD_LCD_MODE,0x04); // *** 80Hz
+	nlcd_SendByte(CMD_LCD_MODE,0xD0); // *** 1:65 divider
+
 	nlcd_SendByte(CMD_LCD_MODE,0x20); // Запись в регистр Vop
 	nlcd_SendByte(CMD_LCD_MODE,0x90);
 	nlcd_SendByte(CMD_LCD_MODE,0xA4); // all on/normal display
@@ -43,13 +50,16 @@ void nlcd_Init(void)
 	nlcd_SendByte(CMD_LCD_MODE,0x07);
 	//nlcd_SendByte(CMD_LCD_MODE,0xF9); //
 	nlcd_SendByte(CMD_LCD_MODE,0xAF); // экран вкл/выкл
-
+//    nlcd_SendByte(CMD_LCD_MODE,0xE2);  // внутренний сброс
+ //   nlcd_SendByte(CMD_LCD_MODE,0xEB);   //temperature control
+//    nlcd_SendByte(CMD_LCD_MODE,0x1A);   //iternal oscillator
+//    nlcd_SendByte(CMD_LCD_MODE,0x20);
 	nlcd_Clear(); // clear LCD
-
-	nlcd_SendByte(CMD_LCD_MODE,0xA7); 	// инвертированный экран
-	_delay_ms(500);                		// 1/2 Sec delay
-	nlcd_SendByte(CMD_LCD_MODE,0xA6); 	// нормальный экран (не инвертированный)
-	_delay_ms(1000);               		// 1 Sec delay
+    CS_LCD_SET;
+//	nlcd_SendByte(CMD_LCD_MODE,0xA7); 	// инвертированный экран
+//	_delay_ms(500);                		// 1/2 Sec delay
+//	nlcd_SendByte(CMD_LCD_MODE,0xA6); 	// нормальный экран (не инвертированный)
+//	_delay_ms(1000);               		// 1 Sec delay
 }
 
 //******************************************************************************
