@@ -24,7 +24,7 @@ void PositionMenuesLevel1();
 void PositionMenuesLevel2();
 uint16_t current_temp;
 //int j=0;
-
+/*
 void USART_init()
 {
 	// Set baud rate
@@ -76,7 +76,7 @@ unsigned char search_ow_devices(void) // поиск всех устройств на шине
 	return sensors_count;
 
 }
-
+//*/
 /*** DUMY CODE ***/
 enum ButtonValues
 {
@@ -153,10 +153,10 @@ void MenuInit();
 //==============================================================================
 int main(void){
     //timer for keyscan initiaization
-    TCCR2 |= (1<<CS22)|(0<<CS21)|(1<<CS20);   // устанавливаем прескалер - 1024(101) 256(100) 64(011) 8(010) 0(001) off(000)
+//    TCCR2 |= (1<<CS22)|(0<<CS21)|(1<<CS20);   // устанавливаем прескалер - 1024(101) 256(100) 64(011) 8(010) 0(001) off(000)
 //   TIFR = 1<<TOV2;   // очищаем флаг прерывания таймера Т0
-   TIMSK |= 1<<TOIE2;   // разрешаем прерывание по переполнению
-   TCNT2 = StartFrom;    // загружаем начальное зн. в счетный регистр
+ //  TIMSK |= 1<<TOIE2;   // разрешаем прерывание по переполнению
+ //  TCNT2 = StartFrom;    // загружаем начальное зн. в счетный регистр
     //keyscan initialization
     InitControl();
     //lcd initialization
@@ -165,21 +165,21 @@ int main(void){
     // menu initialization
     MenuInit();
 
-    	stdout = &usart_str; // указываем, куда будет выводить printf
+//    	stdout = &usart_str; // указываем, куда будет выводить printf
 
 //	DDRB = 0b00000010; PORTB = 0b00000010;
 //	DDRC = 0b00000000; PORTC = 0b00000000;
 	DDRD = 0b00001010; PORTD = 0b00001000;
 
-	USART_init(); // включаем uart
+//	USART_init(); // включаем uart
 
 	timerDelayInit();
 
-	nDevices = search_ow_devices(); // ищем все устройства
+//	nDevices = search_ow_devices(); // ищем все устройства
 
-	printf("---------- Found %d devices ----------", nDevices);
+//	printf("---------- Found %d devices ----------", nDevices);
 
-
+/*
 	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
 	{
 		// узнать устройство можно по его груповому коду, который расположен в первом байте адресса
@@ -218,7 +218,7 @@ int main(void){
 
 	}
 
-
+//*/
 
 //    DisplayHelloScreen();
 //    KeyScan();
