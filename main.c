@@ -75,7 +75,7 @@ enum ButtonValues {
     BUTTON_RIGHT,
     BUTTON_ENTER, //5
     BUTTON_FIRE,
-    BUTTON_PUMP,
+    BUTTON_PUMP,        // восьмой никогда не будет , если только из функции
     BUTTON_SCROLL_UP=9,
     BUTTON_SCROLL_DOWN,
 
@@ -245,8 +245,10 @@ int main(void)
 void MenuInit()
 {
     /* Set up the default menu text write callback, and navigate to an absolute menu item entry. */
-    Menu_SetGenericWriteCallback(Generic_Write);
-    Menu_Navigate(&Menu_1);
+        Menu_Navigate(&Menu_1);
+    Menu_SetGenericWriteCallback(Generic_Write); //вот тут скорее всего меняется местами время запуска вывода текста
+                                                    // и выполнения функции выполнения
+
 }
 
 void SwitchMenu()
