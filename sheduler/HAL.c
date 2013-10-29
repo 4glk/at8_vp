@@ -14,7 +14,7 @@ inline void InitAll(void)
 //LED_DDR = 0xFF;
 //LED_PORT = 0;
 
-//BTN_PORT |= 1<<BTN;
+//BTN_PORT |= 1<<BTN;//test branches
 //BTN_DDR = 0;
 
 //DDRD |=1<<5 | 1<<4;
