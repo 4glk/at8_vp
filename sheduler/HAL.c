@@ -14,7 +14,11 @@ inline void InitAll(void)
 //LED_DDR = 0xFF;
 //LED_PORT = 0;
 
+<<<<<<< HEAD
 //BTN_PORT |= 1<<BTN;//test branches
+=======
+//BTN_PORT |= 1<<BTN;
+>>>>>>> a3bb881... stop the chaos scretches
 //BTN_DDR = 0;
 
 //DDRD |=1<<5 | 1<<4;
