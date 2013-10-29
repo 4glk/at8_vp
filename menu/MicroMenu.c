@@ -45,8 +45,9 @@ void Menu_Navigate(Menu_Item_t* const NewMenu)
 
 void Menu_SetGenericWriteCallback(void (*WriteFunc)(const char* Text))
 {
+    Menu_Navigate(CurrentMenuItem);
 	MenuWriteFunc = WriteFunc;
-	Menu_Navigate(CurrentMenuItem);
+
 }
 
 void Menu_EnterCurrentItem(void)

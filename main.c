@@ -36,11 +36,23 @@ void USART_init()
 	// Set frame format
 	UCSRC = (1<<UCSZ1) | (1<<UCSZ0) | (1<<URSEL);
 }
+//*/
+void USART0_init()
+{
+	// Set baud rate
+	UBRR0H = 0;
+	UBRR0L = 51;
+	UCSR0A = 0;
+	// Enable receiver and transmitter
+	UCSR0B = (1<<TXEN0);
+	// Set frame format
+	UCSR0C = (1<<UCSZ01) | (1<<UCSZ00);// | (1<<URSEL);
+}
 
 void USART0_write(unsigned char data)
 {
-	while ( !( UCSRA & (1<<UDRE)) ) ;
-	UDR = data;
+	while ( !( UCSR0A & (1<<UDRE0)) ) ;
+	UDR0 = data;
 }
 
 FILE usart_str = FDEV_SETUP_STREAM(USART0_write, NULL, _FDEV_SETUP_WRITE); // для функции printf
@@ -152,6 +164,7 @@ void MenuInit();
 
 //==============================================================================
 int main(void){
+    sei();
     //timer for keyscan initiaization
 //    TCCR2 |= (1<<CS22)|(0<<CS21)|(1<<CS20);   // устанавливаем прескалер - 1024(101) 256(100) 64(011) 8(010) 0(001) off(000)
 //   TIFR = 1<<TOV2;   // очищаем флаг прерывания таймера Т0
@@ -165,21 +178,21 @@ int main(void){
     // menu initialization
     MenuInit();
 
-//    	stdout = &usart_str; // указываем, куда будет выводить printf
+    	stdout = &usart_str; // указываем, куда будет выводить printf
 
 //	DDRB = 0b00000010; PORTB = 0b00000010;
 //	DDRC = 0b00000000; PORTC = 0b00000000;
 	DDRD = 0b00001010; PORTD = 0b00001000;
 
-//	USART_init(); // включаем uart
+	USART0_init(); // включаем uart
 
 	timerDelayInit();
 
-//	nDevices = search_ow_devices(); // ищем все устройства
+	nDevices = search_ow_devices(); // ищем все устройства
 
-//	printf("---------- Found %d devices ----------", nDevices);
+	printf("---------- Found %d devices ----------", nDevices);
 
-/*
+//*
 	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
 	{
 		// узнать устройство можно по его груповому коду, который расположен в первом байте адресса
@@ -223,7 +236,7 @@ int main(void){
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
-    sei();
+ //   sei();
     while(1){ 		// Главный цикл диспетчера
  //           if(!flags.KeyPressed&&flags.KeyReleased) nlcd_PrintF(PSTR("BUTTON"));
             //SwitchMenu();
@@ -301,7 +314,7 @@ void SwitchMenu(){
 //char Text[] PROGMEM = "FLASH MEMORY TEST";
 
 
-ISR(TIMER2_OVF_vect){
+ISR(TIMER0_OVF_vect){
     TCNT2 = StartFrom;
 
 //    j++;

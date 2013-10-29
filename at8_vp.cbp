@@ -32,15 +32,14 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-std=c99 -mmcu=atmega8" />
+			<Add option="-std=c99 -mmcu=atmega328p" />
 			<Add option="-DF_CPU=8000000UL" />
 		</Compiler>
 		<Linker>
-			<Add option="-mmcu=atmega8" />
+			<Add option="-mmcu=atmega328p" />
 			<Add option="-Wl,-Map=$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).map,--cref" />
 		</Linker>
 		<ExtraCommands>
-			<Add after="avr-size --mcu=atmega8 --format=avr $(TARGET_OUTPUT_FILE)" />
 			<Add after='cmd /c &quot;avr-objdump -h -S $(TARGET_OUTPUT_FILE) &gt; $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).lss&quot;' />
 			<Add after="avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).hex" />
 			<Add after="avr-objcopy --no-change-warnings -j .eeprom --change-section-lma .eeprom=0 -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).eep" />
@@ -54,6 +53,7 @@
 			<Add after="avr-objcopy --no-change-warnings -j .lock --change-section-lma .lock=0 -O binary $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).lock" />
 			<Add after="avr-objcopy --no-change-warnings -j .signature --change-section-lma .signature=0 -O binary $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).sig" />
 			<Add after="avr-objcopy --no-change-warnings -j .fuse --change-section-lma .fuse=0 -O binary $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).fuse" />
+			<Add after="avr-size --mcu=atmega8 --format=avr $(TARGET_OUTPUT_FILE)" />
 		</ExtraCommands>
 		<Unit filename="at328_vp.DSN" />
 		<Unit filename="at8_vp.DSN" />
@@ -78,6 +78,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="menu/MicroMenu.h" />
+		<Unit filename="onewire/delay.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="onewire/delay.h" />
+		<Unit filename="onewire/ds18x20.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="onewire/ds18x20.h" />
+		<Unit filename="onewire/onewire.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="onewire/onewire.h" />
 		<Unit filename="sheduler/EERTOS.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -92,10 +104,6 @@
 		<Unit filename="sheduler/HAL.h" />
 		<Unit filename="sheduler/avrlibdefs.h" />
 		<Unit filename="sheduler/avrlibtypes.h" />
-		<Unit filename="sheduler/button.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="sheduler/button.h" />
 		<Unit filename="version.h" />
 		<Extensions>
 			<code_completion />
