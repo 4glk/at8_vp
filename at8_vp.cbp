@@ -57,9 +57,6 @@
 		</ExtraCommands>
 		<Unit filename="at328_vp.DSN" />
 		<Unit filename="at8_vp.DSN" />
-		<Unit filename="fuse.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="kbd/kbd.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -78,25 +75,22 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="menu/MicroMenu.h" />
-		<Unit filename="sheduler/EERTOS.c">
+		<Unit filename="onewire/delay.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="sheduler/EERTOS.h" />
-		<Unit filename="sheduler/EERTOSHAL.c">
+		<Unit filename="onewire/delay.h" />
+		<Unit filename="onewire/ds18x20.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="sheduler/EERTOSHAL.h" />
-		<Unit filename="sheduler/HAL.c">
+		<Unit filename="onewire/ds18x20.h" />
+		<Unit filename="onewire/onewire.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="sheduler/HAL.h" />
-		<Unit filename="sheduler/avrlibdefs.h" />
-		<Unit filename="sheduler/avrlibtypes.h" />
-		<Unit filename="sheduler/button.c">
+		<Unit filename="onewire/onewire.h" />
+		<Unit filename="sheduler/dispatch.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="sheduler/button.h" />
-		<Unit filename="version.h" />
+		<Unit filename="sheduler/dispatch.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
