@@ -21,13 +21,13 @@
 
 // Макросы для работы с битами
 #define ClearBit(reg, bit)       reg &= (~(1<<(bit)))
-#define SetBit(reg, bit)         reg |= (1<<(bit))	
-#define InvBit(reg, bit)         reg ^= 1<<bit	
+#define SetBit(reg, bit)         reg |= (1<<(bit))
+#define InvBit(reg, bit)         reg ^= 1<<bit
 
 //******************************************************************************
 // Инициализация контроллера
 void nlcd_Init(void)
-{	
+{
 	// Инициализируем порт на вывод для работы с LCD-контроллером
 	DDR_LCD |= (1<<SCLK_LCD_PIN)|(1<<SDA_LCD_PIN)|(1<<CS_LCD_PIN)|(1<<RST_LCD_PIN);
 
@@ -39,14 +39,14 @@ void nlcd_Init(void)
 	RST_LCD_SET;
 
 
-	nlcd_SendByte(CMD_LCD_MODE,0xE2); // *** SOFTWARE RESET 
+	nlcd_SendByte(CMD_LCD_MODE,0xE2); // *** SOFTWARE RESET
 
 	nlcd_SendByte(CMD_LCD_MODE,0x3A); // *** Use internal oscillator
 	nlcd_SendByte(CMD_LCD_MODE,0xEF); // *** FRAME FREQUENCY:
 	nlcd_SendByte(CMD_LCD_MODE,0x04); // *** 80Hz
 	nlcd_SendByte(CMD_LCD_MODE,0xD0); // *** 1:65 divider
-	
-	nlcd_SendByte(CMD_LCD_MODE,0x20); // Запись в регистр Vop 
+
+	nlcd_SendByte(CMD_LCD_MODE,0x20); // Запись в регистр Vop
 	nlcd_SendByte(CMD_LCD_MODE,0x90);
 
 	nlcd_SendByte(CMD_LCD_MODE,0xA4); // all on/normal display
@@ -84,9 +84,9 @@ void nlcd_Clear(void)
 	nlcd_xcurr=0; nlcd_ycurr=0;		  // Устанавливаем в 0 текущие координаты в видеобуфере
 
 	//nlcd_SendByte(CMD_LCD_MODE,0xAE); // disable display;
-	
+
 	for(unsigned int i=0;i<864;i++) nlcd_SendByte(DATA_LCD_MODE,0x00);
-	
+
 	//nlcd_SendByte(CMD_LCD_MODE,0x07);
 	//nlcd_SendByte(CMD_LCD_MODE,0xAF); // enable display;
 }
@@ -105,16 +105,16 @@ void nlcd_SendByte(char mode,unsigned char c)
 	if (mode) 				// DATA_LCD_MODE
 	{
 		nlcd_memory[nlcd_xcurr][nlcd_ycurr] = c;	// Записываем банные в видеобуфер
-	    
+
 		nlcd_xcurr++;								// Обновляем координаты в видеобуфере
-		
+
 		if (nlcd_xcurr>95)
 		{
 			nlcd_xcurr = 0;
 			nlcd_ycurr++;
 		}
 
-		if (nlcd_ycurr>8) nlcd_ycurr = 0;			
+		if (nlcd_ycurr>8) nlcd_ycurr = 0;
 
 
 		SDA_LCD_SET;								// Передача байта в LCD-контроллер
@@ -133,8 +133,8 @@ void nlcd_SendByte(char mode,unsigned char c)
         SCLK_LCD_SET;
         c <<= 1;
 
-		_delay_us(NLCD_MIN_DELAY);	// *****!!!!! 34 - Минимальная задержка, при которой работает мой LCD-контроллер
-    }	
+//		_delay_us(NLCD_MIN_DELAY);	// *****!!!!! 34 - Минимальная задержка, при которой работает мой LCD-контроллер
+    }
 
     CS_LCD_SET;
 }
@@ -146,10 +146,10 @@ void nlcd_Putc(unsigned char c)
 {
 	if (c>127) c=c-64; 	// Переносим символы кирилицы в кодировке CP1251 в начало второй
 						// половины таблицы ASCII (начиная с кода 0x80)
-	
+
 	for ( unsigned char i = 0; i < 5; i++ )
 		 nlcd_SendByte(DATA_LCD_MODE,pgm_read_byte(&(nlcd_Font[c-32][i])));
-    
+
 	nlcd_SendByte(DATA_LCD_MODE,0x00); // Зазор между символами по горизонтали в 1 пиксель
 }
 
@@ -167,7 +167,7 @@ void nlcd_PutcWide(unsigned char c)
 	   	nlcd_SendByte(DATA_LCD_MODE,glyph);
 	   	nlcd_SendByte(DATA_LCD_MODE,glyph);
     }
-    
+
 	nlcd_SendByte(DATA_LCD_MODE,0x00); // Зазор между символами по горизонтали в 1 пиксель
 //	nlcd_SendByte(DATA_LCD_MODE,0x00); // Можно сделать две линии
 }
@@ -189,7 +189,7 @@ void nlcd_PrintF(unsigned char * message)
 {
 	unsigned char data;
 	while (data=pgm_read_byte(message), data)
-	{ 
+	{
     	nlcd_Putc(data);
 		message++;
     }
@@ -208,10 +208,10 @@ void nlcd_PrintWide(unsigned char * message)
 
 
 //******************************************************************************
-// Устанавливает курсор в необходимое положение. Отсчет начинается в верхнем 
+// Устанавливает курсор в необходимое положение. Отсчет начинается в верхнем
 // левом углу. По горизонтали 16 знакомест, по вертикали - 8
 //  x: 0..15
-//  y: 0..7    
+//  y: 0..7
 void nlcd_GotoXY(char x,char y)
 {
 	x=x*6;	// Переходим от координаты в знакоместах к координатам в пикселях
@@ -219,7 +219,7 @@ void nlcd_GotoXY(char x,char y)
 	nlcd_xcurr=x;
 	nlcd_ycurr=y;
 
-	nlcd_SendByte(CMD_LCD_MODE,(0xB0|(y&0x0F)));      // установка адреса по Y: 0100 yyyy         
+	nlcd_SendByte(CMD_LCD_MODE,(0xB0|(y&0x0F)));      // установка адреса по Y: 0100 yyyy
     nlcd_SendByte(CMD_LCD_MODE,(0x00|(x&0x0F)));      // установка адреса по X: 0000 xxxx - биты (x3 x2 x1 x0)
     nlcd_SendByte(CMD_LCD_MODE,(0x10|((x>>4)&0x07))); // установка адреса по X: 0010 0xxx - биты (x6 x5 x4)
 
@@ -236,7 +236,7 @@ void nlcd_Inverse(unsigned char mode)
 
 
 //******************************************************************************
-// Устанавливает курсор в пикселях. Отсчет начинается в верхнем 
+// Устанавливает курсор в пикселях. Отсчет начинается в верхнем
 // левом углу. По горизонтали 96 пикселей, по вертикали - 65
 //  x: 0..95
 //  y: 0..64
@@ -245,7 +245,7 @@ void nlcd_GotoXY_pix(char x,char y)
 	nlcd_xcurr=x;
 	nlcd_ycurr=y/8;
 
-	nlcd_SendByte(CMD_LCD_MODE,(0xB0|(nlcd_ycurr&0x0F)));      // установка адреса по Y: 0100 yyyy         
+	nlcd_SendByte(CMD_LCD_MODE,(0xB0|(nlcd_ycurr&0x0F)));      // установка адреса по Y: 0100 yyyy
     nlcd_SendByte(CMD_LCD_MODE,(0x00|(x&0x0F)));      // установка адреса по X: 0000 xxxx - биты (x3 x2 x1 x0)
     nlcd_SendByte(CMD_LCD_MODE,(0x10|((x>>4)&0x07))); // установка адреса по X: 0010 0xxx - биты (x6 x5 x4)
 }
@@ -262,7 +262,7 @@ void nlcd_Pixel(unsigned char x,unsigned char y, unsigned char pixel_mode)
 {
 	unsigned char temp;
 
-	nlcd_GotoXY_pix(x,y);        
+	nlcd_GotoXY_pix(x,y);
 	temp=nlcd_memory[nlcd_xcurr][nlcd_ycurr];
 
 	switch(pixel_mode)
@@ -277,7 +277,7 @@ void nlcd_Pixel(unsigned char x,unsigned char y, unsigned char pixel_mode)
      		InvBit(temp, y%8);			// Инвертируем пиксел
 			break;
 	}
-	
+
 	nlcd_memory[nlcd_xcurr][nlcd_ycurr] = temp; // Передаем байт в видеобуфер
 	nlcd_SendByte(DATA_LCD_MODE,temp); // Передаем байт в контроллер
 }
@@ -296,7 +296,7 @@ void nlcd_Line (unsigned char x1,unsigned char y1, unsigned char x2,unsigned cha
 	signed int 	P, diff;
 
 	unsigned char i = 0;
-   
+
 	dx = abs((signed char)(x2 - x1));
 	dy = abs((signed char)(y2 - y1));
 
@@ -440,10 +440,10 @@ void nlcd_Rect (unsigned char x1, unsigned char y1, unsigned char x2, unsigned c
 //  x: 0..95  координата верхнего левого угла по горизонтали (отсчет от верхнего левого угла экрана)
 //	y: 0..64  координата верхнего левого угла по вертикали
 //  picture: указатель на массив с монохромной картинкой, первые 2 байта указывают соответственно
-//			 размер картинки по горизонтали и вертикали 
+//			 размер картинки по горизонтали и вертикали
 void nlcd_Pict  (unsigned char x, unsigned char y, unsigned char * picture)
 {
-	unsigned char pict_width = pgm_read_byte(&picture[0]);  // ширина спрайта в пикселах  
+	unsigned char pict_width = pgm_read_byte(&picture[0]);  // ширина спрайта в пикселах
 	unsigned char pict_height = pgm_read_byte(&picture[1]); // высота спрайта в пикселах
 	unsigned char pict_height_bank=pict_height / 8+((pict_height%8)>0?1:0); // высота спрайта в банках
 	unsigned char y_pos_in_bank = y/8 + ((y%8)>0?1:0);		// позиция по y в банках (строках по 8 пикс.)
@@ -459,7 +459,7 @@ void nlcd_Pict  (unsigned char x, unsigned char y, unsigned char * picture)
 			nlcd_xcurr=x;
 			nlcd_ycurr=y_pos_in_bank + i;
 
-			nlcd_SendByte(CMD_LCD_MODE,(0xB0|((y_pos_in_bank+i)&0x0F))); // установка адреса по Y: 0100 yyyy         
+			nlcd_SendByte(CMD_LCD_MODE,(0xB0|((y_pos_in_bank+i)&0x0F))); // установка адреса по Y: 0100 yyyy
     		nlcd_SendByte(CMD_LCD_MODE,(0x00|(x&0x0F)));      // установка адреса по X: 0000 xxxx - биты (x3 x2 x1 x0)
     		nlcd_SendByte(CMD_LCD_MODE,(0x10|((x>>4)&0x07))); // установка адреса по X: 0010 0xxx - биты (x6 x5 x4)
 

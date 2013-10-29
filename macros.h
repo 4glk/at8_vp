@@ -6,6 +6,14 @@
 #define TB(port,bit) (PORT##port^=(1<<bit))		//togglebit и это , терь не надо писать PORTC  терь только C и все
 #define CH(port,bit) (PIN##port&(1<<bit))		//checkbit CH(B,3) так терь оно будет глядеться
 
+// железо
+// atmega8
+#define ATMEGA8
+
+// atmega328p
+#define ATMEGA328
+
+// битовые поля
 #pragma once
 #include <stdbool.h>
 //*
@@ -42,5 +50,7 @@ PackedBool flags;
 #define CheckBit(reg,bit) (reg&(1<<bit))
 
 void RunTasks(void);
+
+
 #endif // MACROS_
 
