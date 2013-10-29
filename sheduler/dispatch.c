@@ -25,13 +25,6 @@ void AddTask (void (*taskfunc)(void),void (*nextfunc)(void), uint16_t taskdelay,
 }
 
 
-ISR(TIMER2_OVF_vect){
-    timer2++;
-   TCNT2 = StartFrom;
-   if (flags.RunFlag==0)delay_time--;
-   if (delay_time==0)flags.RunFlag=1;
-}
-
 void DispatchTask (void){
     uint8_t n=0;
     if (flags.RunFlag==1){                     // если таймер выставил флаг
@@ -95,4 +88,8 @@ void InitScheduler (void){
    TIMSK |= 1<<TOIE2;   // разрешаем прерывание по переполнению
    TCNT2 = StartFrom;    // загружаем начальное зн. в счетный регистр
    for (i=0; i<MAXnTASKS; i++) DeleteTask(i);   // очищаем массив задач
+}
+
+void Idle(){
+
 }

@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdbool.h>
-#include "macros.h"
+#include "../macros.h"
 
 #pragma once
 /// Типы данных //
@@ -47,5 +47,5 @@ void ResetTask(void (*resfunc)(void));               //обнуление состояния цикли
 void AddTask (void (*taskfunc)(void),void (*nextfunc)(void),uint16_t taskdelay,uint16_t nextdelay,uint16_t taskruns);   //добавление задачи
 //void AddTask (void (*taskfunc)(void),void (*nextfunc)(void), u16 taskdelay, u16 taskperiod,u16 taskruns);
 void DispatchTask (void);       //собсна сам диспетчер и запуск задачи по флагу
-extern void Idle();
+void Idle();
 

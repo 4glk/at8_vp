@@ -6,13 +6,13 @@
 #include "lcd/nokia1100_lcd_lib.h"	// Подключаем драйвер LCD-контроллера NOKIA1100
 #include "menu/MicroMenu.h"          // микроменю
 #include "kbd/kbd.h"                // мои кнопки
-//#include "onewire/onewire.h"        // OW interface
+#include "onewire/onewire.h"        // OW interface
 #include <avr/wdt.h>
-//#include <stdio.h>
 #include <util/delay.h>
 #include "onewire/delay.h"
 #include "onewire/onewire.h"
 #include "onewire/ds18x20.h"
+#include "sheduler/dispatch.h"
 
 #define StartFrom       0xF0 //для 1 мс 1КГц            //на большой частоте висит в убр регистре
 
@@ -299,15 +299,4 @@ void SwitchMenu(){
 }
 
 //char Text[] PROGMEM = "FLASH MEMORY TEST";
-
-
-ISR(TIMER2_OVF_vect){
-    TCNT2 = StartFrom;
-
-//    j++;
-    KeyScan();          //загнать эти функции в отдельный блок , исполняемый по
-    SwitchMenu();       // флагу переполнения TOV2
-//       TIFR = 1<<TOV2;
- //   TB(C,4);
-}
 

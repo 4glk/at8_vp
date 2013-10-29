@@ -133,7 +133,7 @@ void nlcd_SendByte(char mode,unsigned char c)
         SCLK_LCD_SET;
         c <<= 1;
 
-//		_delay_us(NLCD_MIN_DELAY);	// *****!!!!! 34 - Минимальная задержка, при которой работает мой LCD-контроллер
+		_delay_us(NLCD_MIN_DELAY);	// *****!!!!! 34 - Минимальная задержка, при которой работает мой LCD-контроллер
     }
 
     CS_LCD_SET;
