@@ -38,7 +38,7 @@ extern uint16_t timer2;
 volatile task TaskArray[MAXnTASKS];
 
 /// Прототипы фукнций ////////
-void InitScheduler (void);      //инициализация диспетчера
+//void InitScheduler (void);      //инициализация диспетчера
 void UpdateScheduler(void);     //обновление диспетчера
 void DeleteTask (u8 index);     //удаление задачи
 void ResetTask(void (*resfunc)(void));               //обнуление состояния цикличности задачи , выполнится один раз
