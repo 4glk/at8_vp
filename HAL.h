@@ -8,7 +8,7 @@
 // железо
 // atmega8
 //#define ATMEGA8
-
+uint16_t delay_time=100;
 // atmega328p
 #define ATMEGA328
 

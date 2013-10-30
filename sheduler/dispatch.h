@@ -16,7 +16,7 @@ typedef struct task{
    u16 numRun;
 }task;                      // флаг запуска можно вынести за структуру
 
-uint16_t delay_time;
+extern uint16_t delay_time;
         uint16_t dt;
 extern uint16_t timer2;
 
@@ -25,7 +25,7 @@ extern uint16_t timer2;
 // 25 мс при тактовой частоте
 // 8 ћ√ц и предделителе 1024
 //#define StartFrom       0x3D //дл€ 25 мс 40√ц
-#define StartFrom       0xF8 //дл€ 1 мс 1 √ц            //на большой частоте висит в убр регистре
+//#define StartFrom       0xF8 //дл€ 1 мс 1 √ц            //на большой частоте висит в убр регистре
 //#define StartFrom       0xB2 //дл€ 10 мс 100√ц        //недостаточно дл€ индикации
 // максимальное количество задач
 #define MAXnTASKS       8

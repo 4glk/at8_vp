@@ -14,7 +14,7 @@
 #include "onewire/ds18x20.h"
 #include "sheduler/dispatch.h"
 // TODO: разобратьс€ с инициализацией и переключением платформы
-#define StartFrom       0xF0 //дл€ 1 мс 1 √ц            //на большой частоте висит в убр регистре
+//#define StartFrom       0xF0 //дл€ 1 мс 1 √ц            //на большой частоте висит в убр регистре
 
 //TODO:
 //-кнопки
@@ -31,6 +31,7 @@
 
 extern void InitControl();
 extern uint8_t KeyCode(void);
+extern void InitScheduler();
 extern void KeyScan();
 uint8_t KeyCurrentCode;
 void PositionMenuesLevel1();
@@ -168,6 +169,7 @@ int main(void)
     _delay_ms(100); //delay for reset display
     // menu initialization
     MenuInit();
+    InitScheduler();
 
 //    	stdout = &usart_str; // указываем, куда будет выводить printf
 
@@ -178,7 +180,7 @@ int main(void)
 
 //	USART_init(); // включаем uart
 
-    timerDelayInit();
+ //   timerDelayInit();
 
 //	nDevices = search_ow_devices(); // ищем все устройства
 
@@ -228,10 +230,13 @@ int main(void)
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
+    AddTask(KeyScan,Idle,50,0,0xffff);
+    AddTask(SwitchMenu,Idle,50,0,0xffff);
     sei();
     while(1) { 		// √лавный цикл диспетчера
 //           if(!flags.KeyPressed&&flags.KeyReleased) nlcd_PrintF(PSTR("BUTTON"));
         //SwitchMenu();
+        DispatchTask();
         /*
                    if (KeyCurrentCode){
                    switch(KeyCurrentCode){
@@ -247,7 +252,7 @@ int main(void)
                    }
                        KeyCurrentCode=0;
                    }
-        //*/    nlcd_GotoXY(3,3);
+        //*///    nlcd_GotoXY(3,3);
         // nlcd_Print(current_temp);
 
     }
