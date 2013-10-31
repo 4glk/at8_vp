@@ -33,7 +33,7 @@ extern void InitControl();
 extern uint8_t KeyCode(void);
 extern void InitScheduler();
 extern void KeyScan();
-uint8_t KeyCurrentCode;
+extern uint8_t KeyCurrentCode;
 void PositionMenuesLevel1();
 void PositionMenuesLevel2();
 uint16_t current_temp;
@@ -132,12 +132,12 @@ static void Generic_Write(const char* Text)
         nlcd_PrintF(Text);
 }
 //         Name      Next     Previous        Parent         Child     SelectFunc   EnterFunc  Text
-MENU_ITEM(Menu_1,   Menu_2,     Menu_3,     NULL_MENU,      Menu_1_1,PositionMenuesLevel1,Level1Item1_Enter,       "1");
-MENU_ITEM(Menu_2,   Menu_3,     Menu_1,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "2");
-MENU_ITEM(Menu_3,   Menu_1,     Menu_2,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "3");
+MENU_ITEM(Menu_1,   Menu_2,     Menu_3,     NULL_MENU,      Menu_1_1,PositionMenuesLevel1,Level1Item1_Enter,       "1 FIRE");
+MENU_ITEM(Menu_2,   Menu_3,     Menu_1,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "2 VAPORIZER");
+MENU_ITEM(Menu_3,   Menu_1,     Menu_2,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "3 PUMP");
 
-MENU_ITEM(Menu_1_1, Menu_1_2,   Menu_1_2,   Menu_1,      NULL_MENU,PositionMenuesLevel2,   NULL,       "1.1");
-MENU_ITEM(Menu_1_2, Menu_1_1,   Menu_1_1,   Menu_1,      NULL_MENU,PositionMenuesLevel2,   NULL,       "1.2");
+MENU_ITEM(Menu_1_1, Menu_1_2,   Menu_1_2,   Menu_1,      NULL_MENU,PositionMenuesLevel2,   NULL,       "1.1        ");
+MENU_ITEM(Menu_1_2, Menu_1_1,   Menu_1_1,   Menu_1,      NULL_MENU,PositionMenuesLevel2,   NULL,       "1.2        ");
 
 void PositionMenuesLevel1()
 {
@@ -230,9 +230,9 @@ int main(void)
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
-    AddTask(KeyScan,Idle,100,0,0xffff);
-    AddTask(SwitchMenu,Idle,500,0,0xffff);
-    AddTask(Idle,Idle,250,0,0xffff);
+    AddTask(KeyScan,Idle,25,0,0xffff);
+    AddTask(SwitchMenu,Idle,50,0,0xffff);
+//    AddTask(Idle,Idle,250,0,0xffff);
     sei();
     while(1) { 		// Главный цикл диспетчера
 //           if(!flags.KeyPressed&&flags.KeyReleased) nlcd_PrintF(PSTR("BUTTON"));
@@ -276,6 +276,7 @@ void SwitchMenu()
      * other tasks while detecting key presses, enter sleep mode while waiting for user input, etc.
      */
     if (KeyCurrentCode) {
+//    if (6) {
 //		switch (GetButtonPress())
         switch (KeyCurrentCode) {
         case BUTTON_UP:
