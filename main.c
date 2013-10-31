@@ -230,8 +230,9 @@ int main(void)
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
-    AddTask(KeyScan,Idle,50,0,0xffff);
-    AddTask(SwitchMenu,Idle,50,0,0xffff);
+    AddTask(KeyScan,Idle,100,0,0xffff);
+    AddTask(SwitchMenu,Idle,500,0,0xffff);
+    AddTask(Idle,Idle,250,0,0xffff);
     sei();
     while(1) { 		// Главный цикл диспетчера
 //           if(!flags.KeyPressed&&flags.KeyReleased) nlcd_PrintF(PSTR("BUTTON"));

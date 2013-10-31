@@ -8,7 +8,7 @@
 // железо
 // atmega8
 //#define ATMEGA8
-uint16_t delay_time=100;
+uint16_t delay_time=1000;   // задержка до старта , штоб счетчик не ушел в минус
 // atmega328p
 #define ATMEGA328
 

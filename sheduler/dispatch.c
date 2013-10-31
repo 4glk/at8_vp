@@ -1,4 +1,5 @@
 #include "dispatch.h"
+// TODO: сделать несколько вариантов диспетчера с выбором легкий, нормальный, весь зоопарк
 //TODO: макрос на последовательное выполнение нескольких функций (несколько функций и несколько параметров)
 // ввести функцию фриз (Freeze) т.е. увеличивать время задержки выбранной следующей и в данный момент выполняемой
 // функции на время выполняемой добавляемой функции , которую можно назвать дочерней .
@@ -14,12 +15,12 @@
 // другой вариант это куча костылей на каждую функцию , получится слишком громоздко , но зато для меня проще в реализации
 //             || || || || || || ||
 //             \/ \/ \/ \/ \/ \/ \/
-void AddTask (void (*taskfunc)(void),void (*nextfunc)(void), uint16_t taskdelay,uint16_t nextdelay,u16 taskruns){
-   u8 n=0;
-   u8 position=0;
-   while (((TaskArray[n].pfunc!=0)||(TaskArray[n].delay!=0))&&(TaskArray[n].delay<=((taskdelay==0)?(++taskdelay):(taskdelay))&&(n < MAXnTASKS)))n++;
+void AddTask (void (*taskfunc)(void),void (*nextfunc)(void), uint16_t taskdelay,uint16_t nextdelay,uint16_t taskruns){
+   uint8_t n=0;
+   uint8_t position=0;
+   while (((TaskArray[n].pfunc!=0)||(TaskArray[n].countdown!=0))&&(TaskArray[n].countdown<=((taskdelay==0)?(++taskdelay):(taskdelay))&&(n < MAXnTASKS)))n++;
     position=n;
-   while ((TaskArray[n].pfunc != 0) && (TaskArray[n].delay!=0) && (n < MAXnTASKS))n++;
+   while ((TaskArray[n].pfunc != 0) && (TaskArray[n].countdown!=0) && (n < MAXnTASKS))n++;
    for (/*.*/;n>position;n--){
         TaskArray[n]=TaskArray[n-1];
    }
@@ -29,6 +30,7 @@ void AddTask (void (*taskfunc)(void),void (*nextfunc)(void), uint16_t taskdelay,
         TaskArray[position].run = 0;
         TaskArray[position].numRun = taskruns;
         TaskArray[position].nextfunc = nextfunc; //  вызывает следующую ф-ию с параметрами предыдущей :(
+        TaskArray[position].countdown = taskdelay;
 }
 
 
@@ -37,10 +39,10 @@ void DispatchTask (void){
     if (flags.RunFlag==1){                     // если таймер выставил флаг
         task tmp;                       // переменная для хранения нулевого элемента
         tmp=TaskArray[0];
-    while (((TaskArray[n].pfunc != 0) || (TaskArray[n].delay!=0)) && (n < MAXnTASKS)){
+    while (((TaskArray[n].pfunc != 0) || (TaskArray[n].countdown!=0)) && (n < MAXnTASKS)){
         n++; //мотаем пока счетчик не дойдет до задачи с нужной задержкой
         TaskArray[n-1]=TaskArray[n];        //сдвигаем очередь вперед
-        if (TaskArray[n-1].delay) TaskArray[n-1].delay-=dt;     //вычитаем прошедшее время из каждой задачи
+        if (TaskArray[n-1].countdown) TaskArray[n-1].countdown-=dt;     //вычитаем прошедшее время из каждой задачи
    }
     DeleteTask(n);      //удаляем последнюю задачу
     // добавление задачи
@@ -62,8 +64,8 @@ void DispatchTask (void){
    // if (tmp.period&&tmp.numRun!=0) {AddTask(*tmp.pfunc,*tmp.nextfunc,tmp.period,tmp.period,--tmp.numRun);}
   //  else AddTask(*tmp.pfunc,tmp.period,tmp.period);
     //TODO:разобраться с задержками запуска функций, трабла с нулевым значением, временные интервалы не точны
-    if (TaskArray[0].delay!=0) {delay_time=TaskArray[0].delay;} // если здесь +1 , то немного работает ))))
-    else {delay_time=1;} //можно флаг запуска добавить сюда , но в очереди будет нечего убавлять и ф-ию зациклит
+    if (TaskArray[0].countdown!=0) {delay_time=TaskArray[0].countdown;} // если здесь +1 , то немного работает ))))
+    else {delay_time=0;} //можно флаг запуска добавить сюда , но в очереди будет нечего убавлять и ф-ию зациклит
     dt=delay_time;      //или воткнуть туда значение уменьшения , только его нужно брать для точности
     (*tmp.pfunc)();
     flags.RunFlag=0;       //из расчета кол-ва тиков выполняемой функции и частоты прерывания таймера
@@ -77,9 +79,10 @@ void ResetTask(void (*resfunc)(void)){
     TaskArray[i].numRun=0;
 }
 
-void DeleteTask (u8 j)
+void DeleteTask (uint8_t j)
 {
    TaskArray[j].pfunc = 0x0000;
+   TaskArray[j].countdown=0;
    TaskArray[j].delay = 0;
 //   TaskArray[j].period = 0;
    TaskArray[j].run = 0;

@@ -83,12 +83,12 @@ void timerDelayMs(unsigned long int ms)
 ISR(TIMER2_OVF_vect){
 //    timer2++;
    TCNT2 = StartFrom;
-   if (flags.RunFlag==0)delay_time--;
+   if (flags.RunFlag==0&&delay_time!=0)delay_time--;
    if (delay_time==0)flags.RunFlag=1;
 }
 
 void InitScheduler (void){
-   u8 i;
+   uint8_t i;
    TCCR2B |= (1<<CS22)|(0<<CS21)|(1<<CS20);   // устанавливаем прескалер - 1024(101) 256(100) 64(011) 8(010) 0(001) off(000)
    TIFR2 = 1<<TOV0;   // очищаем флаг прерывани€ таймера “0
    TIMSK2 |= 1<<TOIE2;   // разрешаем прерывание по переполнению
