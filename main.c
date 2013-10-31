@@ -63,8 +63,8 @@ void USART0_init()
 	// Set frame format
 	UCSR0C = (1<<UCSZ01) | (1<<UCSZ00);// | (1<<URSEL);
 }
-=======
->>>>>>> mySheduler
+//=======
+//>>>>>>> mySheduler
 
 void USART0_write(unsigned char data)
 {
@@ -181,13 +181,13 @@ void SwitchMenu();
 void MenuInit();
 
 //==============================================================================
-<<<<<<< HEAD
+//<<<<<<< HEAD
 int main(void){
     sei();
-=======
+///=======
 int main(void)
 {
->>>>>>> mySheduler
+//>>>>>>> mySheduler
     //timer for keyscan initiaization
 //    TCCR2 |= (1<<CS22)|(0<<CS21)|(1<<CS20);   // устанавливаем прескалер - 1024(101) 256(100) 64(011) 8(010) 0(001) off(000)
 //   TIFR = 1<<TOV2;   // очищаем флаг прерывания таймера Т0
@@ -217,7 +217,7 @@ int main(void)
 
 	printf("---------- Found %d devices ----------", nDevices);
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //*
 	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
 	{
@@ -258,7 +258,7 @@ int main(void)
 	}
 
 //*/
-=======
+//=======
     /*
     	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
     	{
@@ -299,12 +299,12 @@ int main(void)
     	}
 
     //*/
->>>>>>> mySheduler
+//>>>>>>> mySheduler
 
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
-<<<<<<< HEAD
+//<<<<<<< HEAD
  //   sei();
     while(1){ 		// Главный цикл диспетчера
  //           if(!flags.KeyPressed&&flags.KeyReleased) nlcd_PrintF(PSTR("BUTTON"));
@@ -326,7 +326,7 @@ int main(void)
             }
 //*/    nlcd_GotoXY(3,3);
        // nlcd_Print(current_temp);
-=======
+//=======
     AddTask(KeyScan,Idle,25,0,0xffff);
     AddTask(SwitchMenu,Idle,50,0,0xffff);
 //    AddTask(Idle,Idle,250,0,0xffff);
@@ -352,7 +352,7 @@ int main(void)
                    }
         //*///    nlcd_GotoXY(3,3);
         // nlcd_Print(current_temp);
->>>>>>> mySheduler
+//>>>>>>> mySheduler
 
     }
 
@@ -413,17 +413,5 @@ void SwitchMenu()
 
 //char Text[] PROGMEM = "FLASH MEMORY TEST";
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
-ISR(TIMER0_OVF_vect){
-    TCNT2 = StartFrom;
-
-//    j++;
-    KeyScan();          //загнать эти функции в отдельный блок , исполняемый по
-    SwitchMenu();       // флагу переполнения TOV2
-//       TIFR = 1<<TOV2;
- //   TB(C,4);
-}
-
-=======
->>>>>>> mySheduler
