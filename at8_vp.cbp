@@ -40,6 +40,7 @@
 			<Add option="-Wl,-Map=$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).map,--cref" />
 		</Linker>
 		<ExtraCommands>
+<<<<<<< HEAD
 			<Add after='cmd /c &quot;avr-objdump -h -S $(TARGET_OUTPUT_FILE) &gt; $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).lss&quot;' />
 			<Add after="avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).hex" />
 			<Add after="avr-objcopy --no-change-warnings -j .eeprom --change-section-lma .eeprom=0 -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).eep" />
@@ -53,13 +54,18 @@
 			<Add after="avr-objcopy --no-change-warnings -j .lock --change-section-lma .lock=0 -O binary $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).lock" />
 			<Add after="avr-objcopy --no-change-warnings -j .signature --change-section-lma .signature=0 -O binary $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).sig" />
 			<Add after="avr-objcopy --no-change-warnings -j .fuse --change-section-lma .fuse=0 -O binary $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).fuse" />
+=======
+			<Add after="avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).hex" />
+			<Add after="avr-objcopy --no-change-warnings -j .eeprom --change-section-lma .eeprom=0 -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).eep" />
+>>>>>>> mySheduler
 			<Add after="avr-size --mcu=atmega8 --format=avr $(TARGET_OUTPUT_FILE)" />
 		</ExtraCommands>
-		<Unit filename="at328_vp.DSN" />
-		<Unit filename="at8_vp.DSN" />
-		<Unit filename="fuse.c">
+		<Unit filename="HAL.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="HAL.h" />
+		<Unit filename="at328_vp.DSN" />
+		<Unit filename="at8_vp.DSN" />
 		<Unit filename="kbd/kbd.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -83,6 +89,7 @@
 		</Unit>
 		<Unit filename="onewire/delay.h" />
 		<Unit filename="onewire/ds18x20.c">
+<<<<<<< HEAD
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="onewire/ds18x20.h" />
@@ -91,20 +98,30 @@
 		</Unit>
 		<Unit filename="onewire/onewire.h" />
 		<Unit filename="sheduler/EERTOS.c">
+=======
+>>>>>>> mySheduler
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="sheduler/EERTOS.h" />
-		<Unit filename="sheduler/EERTOSHAL.c">
+		<Unit filename="onewire/ds18x20.h" />
+		<Unit filename="onewire/onewire.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="sheduler/EERTOSHAL.h" />
-		<Unit filename="sheduler/HAL.c">
+		<Unit filename="onewire/onewire.h" />
+		<Unit filename="sheduler/dispatch.c">
 			<Option compilerVar="CC" />
 		</Unit>
+<<<<<<< HEAD
 		<Unit filename="sheduler/HAL.h" />
 		<Unit filename="sheduler/avrlibdefs.h" />
 		<Unit filename="sheduler/avrlibtypes.h" />
 		<Unit filename="version.h" />
+=======
+		<Unit filename="sheduler/dispatch.h" />
+		<Unit filename="usart/usart.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="usart/usart.h" />
+>>>>>>> mySheduler
 		<Extensions>
 			<code_completion />
 			<envvars />
@@ -116,6 +133,15 @@
 				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
 				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
 			</AutoVersioning>
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project project_number="1" output_language="Russian" use_auto_version="1" />
+				<doxyfile_build extract_all="1" extract_private="1" extract_static="1" />
+				<doxyfile_warnings />
+				<doxyfile_output html_help="1" xml="1" />
+				<doxyfile_dot class_diagrams="1" have_dot="1" />
+				<general />
+			</DoxyBlocks>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
