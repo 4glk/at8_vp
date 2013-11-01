@@ -101,11 +101,11 @@ void USART_init()
 	// Set baud rate
 	UBRR0H = 0;
 	UBRR0L = 51;
-	UCSR0A = 0;
+//	UCSR0A = 0;
 	// Enable receiver and transmitter
 	UCSR0B = (1<<TXEN0);
 	// Set frame format
-	UCSR0C = (1<<UCSZ01) | (1<<UCSZ00);// | (1<<URSEL);
+	UCSR0C = (1<<UCSZ01) | (1<<UCSZ00);//(1<<UMSEL00);// | (1<<URSEL);
 }
 
 void timerDelayInit(void){

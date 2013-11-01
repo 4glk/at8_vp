@@ -2,6 +2,7 @@
 #define ONEWIRE_H
 
 #include <avr/io.h>
+#include <avr/interrupt.h>
 
 #define true 1
 #define false 0

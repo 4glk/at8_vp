@@ -37,13 +37,15 @@
 //#define FULL_CHARSET
 
 // Применять русские символы
-#define RUSCHAR
+//#define RUSCHAR
 // Применять строчные (маленькие) буквы
-#define SMALLCHAR
+//#define SMALLCHAR
 // Применять широкие символы
 #define WIDECHAR
 // Применять графику
-#define GRAPHICS
+//#define GRAPHICS
+// Применить использование изображений
+//#define PICTURE
 // *****!!!!! Минимальная задержка, при которой работает мой LCD-контроллер
 // *****!!!!! Подбирается экспериментально под конкретный контроллер
 #define NLCD_MIN_DELAY	0           //34
@@ -111,6 +113,8 @@ void nlcd_Pixel (unsigned char x,unsigned char y, unsigned char pixel_mode);
 void nlcd_Line  (unsigned char x1,unsigned char y1, unsigned char x2,unsigned char y2, unsigned char pixel_mode);
 void nlcd_Circle(unsigned char x, unsigned char y, unsigned char radius, unsigned char fill, unsigned char pixel_mode);
 void nlcd_Rect  (unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2, unsigned char fill, unsigned char pixel_mode);
+#endif // GRAPHICS
+#ifdef PICTURE
 void nlcd_Pict  (unsigned char x, unsigned char y, unsigned char * picture);
 #endif
 #endif /* _NOKIA1100_LCD_LIB_H_ */

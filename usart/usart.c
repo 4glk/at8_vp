@@ -1,15 +1,14 @@
 #include "usart.h"
 
 
-/*
+//*
 
-void USART0_write(unsigned char data)
-{
-	while ( !( UCSRA & (1<<UDRE)) ) ;
-	UDR = data;
+void USART0_write(unsigned char data){
+	while ( !( UCSR0A & (1<<UDRE0)) ) ;
+	UDR0 = data;
 }
 
-FILE usart_str = FDEV_SETUP_STREAM(USART0_write, NULL, _FDEV_SETUP_WRITE); // для функции printf
+
 
 void print_address(unsigned char* address) {
 	printf("%.2X %.2X %.2X %.2X %.2X %.2X %.2X %.2X", address[0],address[1],address[2],address[3],address[4],address[5],address[6],address[7]);
@@ -18,34 +17,29 @@ void print_address(unsigned char* address) {
 unsigned char	nDevices;	// количество сенсоров
 unsigned char	owDevicesIDs[MAXDEVICES][8];	// Их ID
 
-unsigned char search_ow_devices(void) // поиск всех устройств на шине
-{
+unsigned char search_ow_devices(void){ // поиск всех устройств на шине
 	unsigned char	i;
    	unsigned char	id[OW_ROMCODE_SIZE];
    	unsigned char	diff, sensors_count;
-
 	sensors_count = 0;
-
-	for( diff = OW_SEARCH_FIRST; diff != OW_LAST_DEVICE && sensors_count < MAXDEVICES ; )
-    {
+	for( diff = OW_SEARCH_FIRST; diff != OW_LAST_DEVICE && sensors_count < MAXDEVICES ; ){
 		OW_FindROM( &diff, &id[0] );
-
       	if( diff == OW_PRESENCE_ERR ) break;
-
       	if( diff == OW_DATA_ERR )	break;
-
       	for (i=0;i<OW_ROMCODE_SIZE;i++)
          	owDevicesIDs[sensors_count][i] = id[i];
-
 		sensors_count++;
     }
 	return sensors_count;
-
 }
-//*/
-//	nDevices = search_ow_devices(); // ищем все устройства
-//	printf("---------- Found %d devices ----------", nDevices);
-    /*
+
+void usartDebug(){
+	nDevices = search_ow_devices(); // ищем все устройства
+	printf("---------- Found %d devices ----------", nDevices);
+
+}//*/
+
+/*
     void usartPrintOnewire(){
     	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
     	{
