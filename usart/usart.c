@@ -35,12 +35,12 @@ unsigned char search_ow_devices(void){ // поиск всех устройств на шине
 	sensors_count = 0;
 	for( diff = OW_SEARCH_FIRST; diff != OW_LAST_DEVICE && sensors_count < MAXDEVICES ; ){
 		OW_FindROM( &diff, &id[0] );
-     // 	if( diff == OW_PRESENCE_ERR ) break;
+      	if( diff == OW_PRESENCE_ERR ) break;
       	if( diff == OW_DATA_ERR )	break;
       	for (i=0;i<OW_ROMCODE_SIZE;i++)
          	owDevicesIDs[sensors_count][i] = id[i];
 		sensors_count++;
-
+            USART0_write(sensors_count+48);
     }	USART0_write('S');
 	return sensors_count;
 }

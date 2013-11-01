@@ -19,6 +19,7 @@
 #include "usart/usart.h"
 
 #define TASCII(numb) (numb+48)
+#define OW_BIT_OUT
 // TODO: разобратьс€ с инициализацией и переключением платформы
 //#define StartFrom       0xF0 //дл€ 1 мс 1 √ц            //на большой частоте висит в убр регистре
 
@@ -137,13 +138,29 @@ int main(void)
     InitScheduler();
 //  DDRD = 0b00001010;
 //    PORTD = 0b00001000;
+	#ifndef OW_TWO_PINS //если используетс€ один пин, укажите его номер
+//		#define OW_BIT 2
+		    sbi(OW_DDR,OW_BIT);
+            sbi(OW_PORT,OW_BIT);
+	#else // если используютс€ 2 пина, укажите их номера
+//		#define OW_BIT_OUT 2
+//		#define OW_BIT_IN 3
 
+//    sbi((OW_DDR),(OW_BIT_OUT));
+//    sbi(OW_PORT,OW_BIT_OUT);
+//    cbi(OW_DDR,OW_BIT_IN);
+//    cbi(OW_PORT,OW_BIT_IN);
+
+	#endif
 	USART_init(); // включаем uart
     timerDelayInit();
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
-
+//    sbi((OW_DDR),(OW_BIT_OUT));
+//    sbi(OW_PORT,OW_BIT_OUT);
+//    cbi(OW_DDR,OW_BIT_IN);
+//    cbi(OW_PORT,OW_BIT_IN);
 //    stdout = &usart_str; // указываем, куда будет выводить printf
     AddTask(KeyScan,Idle,5,0,0xffff);
     AddTask(SwitchMenu,Idle,25,0,0xffff);

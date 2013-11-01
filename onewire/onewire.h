@@ -3,6 +3,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include "../macros.h"
 
 #define true 1
 #define false 0
@@ -27,9 +28,15 @@
 	#define OW_PIN PIND
 	#ifndef OW_TWO_PINS //если используется один пин, укажите его номер
 		#define OW_BIT 2
+//		    sbi(OW_DDR,OW_BIT);
+//            sbi(OW_PORT,OW_BIT);
 	#else // если используются 2 пина, укажите их номера
 		#define OW_BIT_OUT 3
 		#define OW_BIT_IN 2
+//    sbi(OW_DDR,OW_BIT_OUT);
+//    sbi(OW_PORT,OW_BIT_OUT);
+//    cbi(OW_DDR,OW_BIT_IN);
+//    cbi(OW_PORT,OW_BIT_IN);
 	#endif
 #endif
 

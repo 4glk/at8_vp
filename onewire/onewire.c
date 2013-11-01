@@ -9,7 +9,7 @@
 #define ibi(reg,bit) reg ^= (1<<bit)
 #define CheckBit(reg,bit) (reg&(1<<bit))
 
-extern void RunTasks(unsigned char tasks);
+//extern void RunTasks(unsigned char tasks);
 
 void OthersTasks(void){
 //	RunTasks(0xFF);
@@ -23,12 +23,12 @@ void OW_Set(unsigned char mode)
 	if (mode) {
 		cbi(OW_PORT, OW_BIT);
 		sbi(OW_DDR, OW_BIT);
-		USART0_write('2');
+	//	USART0_write('2');
 	}
 	else {
 		cbi(OW_PORT, OW_BIT);
 		cbi(OW_DDR, OW_BIT);
-		USART0_write('1');
+	//	USART0_write('1');
 	}
 #else
 	if (mode) cbi(OW_PORT, OW_BIT_OUT);
