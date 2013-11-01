@@ -63,8 +63,7 @@ void USART0_init()
 	// Set frame format
 	UCSR0C = (1<<UCSZ01) | (1<<UCSZ00);// | (1<<URSEL);
 }
-=======
->>>>>>> mySheduler
+
 
 void USART0_write(unsigned char data)
 {
@@ -181,13 +180,10 @@ void SwitchMenu();
 void MenuInit();
 
 //==============================================================================
-<<<<<<< HEAD
-int main(void){
-    sei();
-=======
+
 int main(void)
 {
->>>>>>> mySheduler
+
     //timer for keyscan initiaization
 //    TCCR2 |= (1<<CS22)|(0<<CS21)|(1<<CS20);   // устанавливаем прескалер - 1024(101) 256(100) 64(011) 8(010) 0(001) off(000)
 //   TIFR = 1<<TOV2;   // очищаем флаг прерывания таймера Т0
@@ -217,48 +213,7 @@ int main(void)
 
 	printf("---------- Found %d devices ----------", nDevices);
 
-<<<<<<< HEAD
-//*
-	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
-	{
-		// узнать устройство можно по его груповому коду, который расположен в первом байте адресса
-		switch (owDevicesIDs[i][0])
-		{
-			case OW_DS18B20_FAMILY_CODE: { // если найден термодатчик DS18B20
-				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-				printf(" - Thermometer DS18B20"); // печатаем тип устройства
-				DS18x20_StartMeasureAddressed(owDevicesIDs[i]); // запускаем измерение
-				timerDelayMs(800); // ждем минимум 750 мс, пока конвентируется температура
-				unsigned char	data[2]; // переменная для хранения старшего и младшего байта данных
-				DS18x20_ReadData(owDevicesIDs[i], data); // считываем данные
-				unsigned char	themperature[3]; // в этот массив будет записана температура
-				DS18x20_ConvertToThemperature(data, themperature); // преобразовываем температуру в человекопонятный вид
-				printf(": %d.%d C", themperature[1],themperature[2]);
-				current_temp=themperature[1];
-			} break;
-			case OW_DS18S20_FAMILY_CODE: { // если найден термодатчик DS18B20
-				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-				printf(" - Thermometer DS18S20"); // печатаем тип устройства
-			} break;
 
-			case OW_DS1990_FAMILY_CODE: { // если найден электронный ключ DS1990
-				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-				printf(" - Serial button DS1990"); // печатаем тип устройства
-			} break;
-			case OW_DS2430_FAMILY_CODE: { // если найдена EEPROM
-				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-				printf(" - EEPROM DS2430"); // печатаем тип устройства
-			} break;
-			case OW_DS2413_FAMILY_CODE: { // если найден ключ
-				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-				printf(" - Switch 2413"); // печатаем тип устройства
-			} break;
-		}
-
-	}
-
-//*/
-=======
     /*
     	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
     	{
@@ -299,34 +254,11 @@ int main(void)
     	}
 
     //*/
->>>>>>> mySheduler
 
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
-<<<<<<< HEAD
- //   sei();
-    while(1){ 		// Главный цикл диспетчера
- //           if(!flags.KeyPressed&&flags.KeyReleased) nlcd_PrintF(PSTR("BUTTON"));
-            //SwitchMenu();
- /*
-            if (KeyCurrentCode){
-            switch(KeyCurrentCode){
-            case 0:break;
-            case 1:nlcd_PrintF(PSTR("1"));break;
-            case 2:nlcd_PrintF(PSTR("2"));break;
-            case 3:nlcd_PrintF(PSTR("3"));break;
-            case 4:nlcd_PrintF(PSTR("4"));break;
-            case 5:nlcd_PrintF(PSTR("5"));break;
-            case 6:nlcd_PrintF(PSTR("6"));break;
-            case 7:nlcd_PrintF(PSTR("7"));break;
-            default:KeyCurrentCode=0;break;
-            }
-                KeyCurrentCode=0;
-            }
-//*/    nlcd_GotoXY(3,3);
-       // nlcd_Print(current_temp);
-=======
+
     AddTask(KeyScan,Idle,25,0,0xffff);
     AddTask(SwitchMenu,Idle,50,0,0xffff);
 //    AddTask(Idle,Idle,250,0,0xffff);
@@ -352,7 +284,7 @@ int main(void)
                    }
         //*///    nlcd_GotoXY(3,3);
         // nlcd_Print(current_temp);
->>>>>>> mySheduler
+
 
     }
 
@@ -413,17 +345,3 @@ void SwitchMenu()
 
 //char Text[] PROGMEM = "FLASH MEMORY TEST";
 
-<<<<<<< HEAD
-
-ISR(TIMER0_OVF_vect){
-    TCNT2 = StartFrom;
-
-//    j++;
-    KeyScan();          //загнать эти функции в отдельный блок , исполняемый по
-    SwitchMenu();       // флагу переполнения TOV2
-//       TIFR = 1<<TOV2;
- //   TB(C,4);
-}
-
-=======
->>>>>>> mySheduler
