@@ -40,6 +40,7 @@ uint16_t current_temp;
 //int j=0;
 /*
 <<<<<<< HEAD
+<<<<<<< HEAD
 void USART_init()
 {
 	// Set baud rate
@@ -69,11 +70,13 @@ void USART0_init()
 //=======
 //>>>>>>> mySheduler
 >>>>>>> ab5ec388d66b5f4df83f2d4c36c72cea71c24101
+=======
+>>>>>>> allgood
 
 void USART0_write(unsigned char data)
 {
-	while ( !( UCSR0A & (1<<UDRE0)) ) ;
-	UDR0 = data;
+	while ( !( UCSRA & (1<<UDRE)) ) ;
+	UDR = data;
 }
 
 FILE usart_str = FDEV_SETUP_STREAM(USART0_write, NULL, _FDEV_SETUP_WRITE); // для функции printf
@@ -186,6 +189,7 @@ void MenuInit();
 
 //==============================================================================
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 int main(void)
 {
@@ -199,6 +203,10 @@ int main(void)
 {
 //>>>>>>> mySheduler
 >>>>>>> ab5ec388d66b5f4df83f2d4c36c72cea71c24101
+=======
+int main(void)
+{
+>>>>>>> allgood
     //timer for keyscan initiaization
 //    TCCR2 |= (1<<CS22)|(0<<CS21)|(1<<CS20);   // устанавливаем прескалер - 1024(101) 256(100) 64(011) 8(010) 0(001) off(000)
 //   TIFR = 1<<TOV2;   // очищаем флаг прерывания таймера Т0
@@ -213,21 +221,22 @@ int main(void)
     MenuInit();
     InitScheduler();
 
-    	stdout = &usart_str; // указываем, куда будет выводить printf
+//    	stdout = &usart_str; // указываем, куда будет выводить printf
 
 //	DDRB = 0b00000010; PORTB = 0b00000010;
 //	DDRC = 0b00000000; PORTC = 0b00000000;
     DDRD = 0b00001010;
     PORTD = 0b00001000;
 
-	USART0_init(); // включаем uart
+//	USART_init(); // включаем uart
 
  //   timerDelayInit();
 
-	nDevices = search_ow_devices(); // ищем все устройства
+//	nDevices = search_ow_devices(); // ищем все устройства
 
-	printf("---------- Found %d devices ----------", nDevices);
+//	printf("---------- Found %d devices ----------", nDevices);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 =======
@@ -318,10 +327,53 @@ int main(void)
 =======
 //>>>>>>> mySheduler
 >>>>>>> ab5ec388d66b5f4df83f2d4c36c72cea71c24101
+=======
+    /*
+    	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
+    	{
+    		// узнать устройство можно по его груповому коду, который расположен в первом байте адресса
+    		switch (owDevicesIDs[i][0])
+    		{
+    			case OW_DS18B20_FAMILY_CODE: { // если найден термодатчик DS18B20
+    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+    				printf(" - Thermometer DS18B20"); // печатаем тип устройства
+    				DS18x20_StartMeasureAddressed(owDevicesIDs[i]); // запускаем измерение
+    				timerDelayMs(800); // ждем минимум 750 мс, пока конвентируется температура
+    				unsigned char	data[2]; // переменная для хранения старшего и младшего байта данных
+    				DS18x20_ReadData(owDevicesIDs[i], data); // считываем данные
+    				unsigned char	themperature[3]; // в этот массив будет записана температура
+    				DS18x20_ConvertToThemperature(data, themperature); // преобразовываем температуру в человекопонятный вид
+    				printf(": %d.%d C", themperature[1],themperature[2]);
+    				current_temp=themperature[1];
+    			} break;
+    			case OW_DS18S20_FAMILY_CODE: { // если найден термодатчик DS18B20
+    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+    				printf(" - Thermometer DS18S20"); // печатаем тип устройства
+    			} break;
+
+    			case OW_DS1990_FAMILY_CODE: { // если найден электронный ключ DS1990
+    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+    				printf(" - Serial button DS1990"); // печатаем тип устройства
+    			} break;
+    			case OW_DS2430_FAMILY_CODE: { // если найдена EEPROM
+    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+    				printf(" - EEPROM DS2430"); // печатаем тип устройства
+    			} break;
+    			case OW_DS2413_FAMILY_CODE: { // если найден ключ
+    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+    				printf(" - Switch 2413"); // печатаем тип устройства
+    			} break;
+    		}
+
+    	}
+
+    //*/
+>>>>>>> allgood
 
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 =======
@@ -349,6 +401,8 @@ int main(void)
        // nlcd_Print(current_temp);
 //=======
 >>>>>>> ab5ec388d66b5f4df83f2d4c36c72cea71c24101
+=======
+>>>>>>> allgood
     AddTask(KeyScan,Idle,25,0,0xffff);
     AddTask(SwitchMenu,Idle,50,0,0xffff);
 //    AddTask(Idle,Idle,250,0,0xffff);
@@ -375,10 +429,13 @@ int main(void)
         //*///    nlcd_GotoXY(3,3);
         // nlcd_Print(current_temp);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 //>>>>>>> mySheduler
 >>>>>>> ab5ec388d66b5f4df83f2d4c36c72cea71c24101
+=======
+>>>>>>> allgood
 
     }
 
@@ -440,7 +497,10 @@ void SwitchMenu()
 //char Text[] PROGMEM = "FLASH MEMORY TEST";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 //<<<<<<< HEAD
 
 >>>>>>> ab5ec388d66b5f4df83f2d4c36c72cea71c24101
+=======
+>>>>>>> allgood

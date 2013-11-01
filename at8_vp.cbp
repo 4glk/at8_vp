@@ -41,6 +41,7 @@
 		</Linker>
 		<ExtraCommands>
 <<<<<<< HEAD
+<<<<<<< HEAD
 			<Add after='cmd /c &quot;avr-objdump -h -S $(TARGET_OUTPUT_FILE) &gt; $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).lss&quot;' />
 			<Add after="avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).hex" />
 			<Add after="avr-objcopy --no-change-warnings -j .eeprom --change-section-lma .eeprom=0 -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).eep" />
@@ -58,6 +59,10 @@
 			<Add after="avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).hex" />
 			<Add after="avr-objcopy --no-change-warnings -j .eeprom --change-section-lma .eeprom=0 -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).eep" />
 >>>>>>> mySheduler
+=======
+			<Add after="avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).hex" />
+			<Add after="avr-objcopy --no-change-warnings -j .eeprom --change-section-lma .eeprom=0 -O ihex $(TARGET_OUTPUT_FILE) $(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).eep" />
+>>>>>>> allgood
 			<Add after="avr-size --mcu=atmega8 --format=avr $(TARGET_OUTPUT_FILE)" />
 		</ExtraCommands>
 		<Unit filename="HAL.c">
@@ -90,6 +95,7 @@
 		<Unit filename="onewire/delay.h" />
 		<Unit filename="onewire/ds18x20.c">
 <<<<<<< HEAD
+<<<<<<< HEAD
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="onewire/ds18x20.h" />
@@ -100,6 +106,8 @@
 		<Unit filename="sheduler/EERTOS.c">
 =======
 >>>>>>> mySheduler
+=======
+>>>>>>> allgood
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="onewire/ds18x20.h" />
@@ -111,17 +119,23 @@
 			<Option compilerVar="CC" />
 		</Unit>
 <<<<<<< HEAD
+<<<<<<< HEAD
 		<Unit filename="sheduler/HAL.h" />
 		<Unit filename="sheduler/avrlibdefs.h" />
 		<Unit filename="sheduler/avrlibtypes.h" />
 		<Unit filename="version.h" />
 =======
+=======
+>>>>>>> allgood
 		<Unit filename="sheduler/dispatch.h" />
 		<Unit filename="usart/usart.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="usart/usart.h" />
+<<<<<<< HEAD
 >>>>>>> mySheduler
+=======
+>>>>>>> allgood
 		<Extensions>
 			<code_completion />
 			<envvars />
