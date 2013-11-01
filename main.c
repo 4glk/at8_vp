@@ -17,10 +17,10 @@
 //#define StartFrom       0xF0 //дл€ 1 мс 1 √ц            //на большой частоте висит в убр регистре
 
 //TODO:
-//-кнопки
-//-дисплей
-//-меню
-//-диспетчер
+//+кнопки
+//+дисплей
+//!+меню
+//+диспетчер
 //-датчик температуры
 //-датчик уровн€
 //-юсарт дл€ отладки
@@ -38,48 +38,7 @@ void PositionMenuesLevel1();
 void PositionMenuesLevel2();
 uint16_t current_temp;
 //int j=0;
-/*
 
-void USART0_write(unsigned char data)
-{
-	while ( !( UCSRA & (1<<UDRE)) ) ;
-	UDR = data;
-}
-
-FILE usart_str = FDEV_SETUP_STREAM(USART0_write, NULL, _FDEV_SETUP_WRITE); // дл€ функции printf
-
-void print_address(unsigned char* address) {
-	printf("%.2X %.2X %.2X %.2X %.2X %.2X %.2X %.2X", address[0],address[1],address[2],address[3],address[4],address[5],address[6],address[7]);
-}
-
-unsigned char	nDevices;	// количество сенсоров
-unsigned char	owDevicesIDs[MAXDEVICES][8];	// »х ID
-
-unsigned char search_ow_devices(void) // поиск всех устройств на шине
-{
-	unsigned char	i;
-   	unsigned char	id[OW_ROMCODE_SIZE];
-   	unsigned char	diff, sensors_count;
-
-	sensors_count = 0;
-
-	for( diff = OW_SEARCH_FIRST; diff != OW_LAST_DEVICE && sensors_count < MAXDEVICES ; )
-    {
-		OW_FindROM( &diff, &id[0] );
-
-      	if( diff == OW_PRESENCE_ERR ) break;
-
-      	if( diff == OW_DATA_ERR )	break;
-
-      	for (i=0;i<OW_ROMCODE_SIZE;i++)
-         	owDevicesIDs[sensors_count][i] = id[i];
-
-		sensors_count++;
-    }
-	return sensors_count;
-
-}
-//*/
 /*** DUMY CODE ***/
 enum ButtonValues {
     BUTTON_NONE, //0
@@ -157,76 +116,16 @@ void MenuInit();
 //==============================================================================
 int main(void)
 {
-    //timer for keyscan initiaization
-//    TCCR2 |= (1<<CS22)|(0<<CS21)|(1<<CS20);   // устанавливаем прескалер - 1024(101) 256(100) 64(011) 8(010) 0(001) off(000)
-//   TIFR = 1<<TOV2;   // очищаем флаг прерывани€ таймера “0
-//  TIMSK |= 1<<TOIE2;   // разрешаем прерывание по переполнению
-//  TCNT2 = StartFrom;    // загружаем начальное зн. в счетный регистр
-    //keyscan initialization
     InitControl();
-    //lcd initialization
     nlcd_Init();
     _delay_ms(100); //delay for reset display
-    // menu initialization
     MenuInit();
     InitScheduler();
-
 //    	stdout = &usart_str; // указываем, куда будет выводить printf
-
-//	DDRB = 0b00000010; PORTB = 0b00000010;
-//	DDRC = 0b00000000; PORTC = 0b00000000;
     DDRD = 0b00001010;
     PORTD = 0b00001000;
-
 //	USART_init(); // включаем uart
-
  //   timerDelayInit();
-
-//	nDevices = search_ow_devices(); // ищем все устройства
-
-//	printf("---------- Found %d devices ----------", nDevices);
-
-    /*
-    	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
-    	{
-    		// узнать устройство можно по его груповому коду, который расположен в первом байте адресса
-    		switch (owDevicesIDs[i][0])
-    		{
-    			case OW_DS18B20_FAMILY_CODE: { // если найден термодатчик DS18B20
-    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-    				printf(" - Thermometer DS18B20"); // печатаем тип устройства
-    				DS18x20_StartMeasureAddressed(owDevicesIDs[i]); // запускаем измерение
-    				timerDelayMs(800); // ждем минимум 750 мс, пока конвентируетс€ температура
-    				unsigned char	data[2]; // переменна€ дл€ хранени€ старшего и младшего байта данных
-    				DS18x20_ReadData(owDevicesIDs[i], data); // считываем данные
-    				unsigned char	themperature[3]; // в этот массив будет записана температура
-    				DS18x20_ConvertToThemperature(data, themperature); // преобразовываем температуру в человекопон€тный вид
-    				printf(": %d.%d C", themperature[1],themperature[2]);
-    				current_temp=themperature[1];
-    			} break;
-    			case OW_DS18S20_FAMILY_CODE: { // если найден термодатчик DS18B20
-    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-    				printf(" - Thermometer DS18S20"); // печатаем тип устройства
-    			} break;
-
-    			case OW_DS1990_FAMILY_CODE: { // если найден электронный ключ DS1990
-    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-    				printf(" - Serial button DS1990"); // печатаем тип устройства
-    			} break;
-    			case OW_DS2430_FAMILY_CODE: { // если найдена EEPROM
-    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-    				printf(" - EEPROM DS2430"); // печатаем тип устройства
-    			} break;
-    			case OW_DS2413_FAMILY_CODE: { // если найден ключ
-    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-    				printf(" - Switch 2413"); // печатаем тип устройства
-    			} break;
-    		}
-
-    	}
-
-    //*/
-
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
@@ -235,27 +134,7 @@ int main(void)
 //    AddTask(Idle,Idle,250,0,0xffff);
     sei();
     while(1) { 		// √лавный цикл диспетчера
-//           if(!flags.KeyPressed&&flags.KeyReleased) nlcd_PrintF(PSTR("BUTTON"));
-        //SwitchMenu();
         DispatchTask();
-        /*
-                   if (KeyCurrentCode){
-                   switch(KeyCurrentCode){
-                   case 0:break;
-                   case 1:nlcd_PrintF(PSTR("1"));break;
-                   case 2:nlcd_PrintF(PSTR("2"));break;
-                   case 3:nlcd_PrintF(PSTR("3"));break;
-                   case 4:nlcd_PrintF(PSTR("4"));break;
-                   case 5:nlcd_PrintF(PSTR("5"));break;
-                   case 6:nlcd_PrintF(PSTR("6"));break;
-                   case 7:nlcd_PrintF(PSTR("7"));break;
-                   default:KeyCurrentCode=0;break;
-                   }
-                       KeyCurrentCode=0;
-                   }
-        //*///    nlcd_GotoXY(3,3);
-        // nlcd_Print(current_temp);
-
     }
 
     return 0;
@@ -267,7 +146,6 @@ void MenuInit()
         Menu_Navigate(&Menu_1);
     Menu_SetGenericWriteCallback(Generic_Write); //вот тут скорее всего мен€етс€ местами врем€ запуска вывода текста
                                                     // и выполнени€ функции выполнени€
-
 }
 
 void SwitchMenu()
