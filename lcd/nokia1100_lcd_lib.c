@@ -59,11 +59,16 @@ void nlcd_Init(void)
 	nlcd_SendByte(CMD_LCD_MODE,0x10); // установить X-адрес, старшие 3 бита
 	nlcd_SendByte(CMD_LCD_MODE,0x0);  // установить X-адрес, младшие 4 бита
 
-	//nlcd_SendByte(CMD_LCD_MODE,0xC8); // mirror Y axis (about X axis)
-	//nlcd_SendByte(CMD_LCD_MODE,0xA1); // Инвертировать экран по горизонтали
+	nlcd_SendByte(CMD_LCD_MODE,0xC8); // mirror Y axis (about X axis)
+	nlcd_SendByte(CMD_LCD_MODE,0xA1); // Инвертировать экран по горизонтали
 
 	nlcd_SendByte(CMD_LCD_MODE,0xAC); // set initial row (R0) of the display
 	nlcd_SendByte(CMD_LCD_MODE,0x07);
+
+//    nlcd_SendByte(CMD_LCD_MODE,0xE2);   // внутренний сброс
+//    nlcd_SendByte(CMD_LCD_MODE,0xEB);   //temperature control
+//    nlcd_SendByte(CMD_LCD_MODE,0x1A);   //iternal oscillator
+//    nlcd_SendByte(CMD_LCD_MODE,0x20);
 
 	//nlcd_SendByte(CMD_LCD_MODE,0xF9); //
 
