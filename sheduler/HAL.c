@@ -16,6 +16,7 @@ inline void InitAll(void)
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 //BTN_PORT |= 1<<BTN;//test branches
 =======
 //BTN_PORT |= 1<<BTN;
@@ -23,6 +24,9 @@ inline void InitAll(void)
 =======
 //BTN_PORT |= 1<<BTN;//test branches
 >>>>>>> 84c6cd8... test branches
+=======
+//BTN_PORT |= 1<<BTN;//test branches
+>>>>>>> allgood
 //BTN_DDR = 0;
 
 //DDRD |=1<<5 | 1<<4;
