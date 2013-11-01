@@ -6,53 +6,44 @@
 #include "lcd/nokia1100_lcd_lib.h"	// Подключаем драйвер LCD-контроллера NOKIA1100
 #include "menu/MicroMenu.h"          // микроменю
 #include "kbd/kbd.h"                // мои кнопки
-//#include "onewire/onewire.h"        // OW interface
+#include "onewire/onewire.h"        // OW interface
 #include <avr/wdt.h>
-//#include <stdio.h>
 #include <util/delay.h>
 #include "onewire/delay.h"
 #include "onewire/onewire.h"
 #include "onewire/ds18x20.h"
+#include "sheduler/dispatch.h"
+// TODO: разобраться с инициализацией и переключением платформы
+//#define StartFrom       0xF0 //для 1 мс 1КГц            //на большой частоте висит в убр регистре
 
-#define StartFrom       0xF0 //для 1 мс 1КГц            //на большой частоте висит в убр регистре
+//TODO:
+//-кнопки
+//-дисплей
+//-меню
+//-диспетчер
+//-датчик температуры
+//-датчик уровня
+//-юсарт для отладки
+//-алгоритм работы горелки и насоса трубы
+//-режимы
+//-звуковое оповещение
+
 
 extern void InitControl();
 extern uint8_t KeyCode(void);
+extern void InitScheduler();
 extern void KeyScan();
-uint8_t KeyCurrentCode;
+extern uint8_t KeyCurrentCode;
 void PositionMenuesLevel1();
 void PositionMenuesLevel2();
 uint16_t current_temp;
 //int j=0;
 /*
-void USART_init()
-{
-	// Set baud rate
-	UBRRH = 0;
-	UBRRL = 51;
-	UCSRA = 0;
-	// Enable receiver and transmitter
-	UCSRB = (1<<TXEN);
-	// Set frame format
-	UCSRC = (1<<UCSZ1) | (1<<UCSZ0) | (1<<URSEL);
-}
-//*/
-void USART0_init()
-{
-	// Set baud rate
-	UBRR0H = 0;
-	UBRR0L = 51;
-	UCSR0A = 0;
-	// Enable receiver and transmitter
-	UCSR0B = (1<<TXEN0);
-	// Set frame format
-	UCSR0C = (1<<UCSZ01) | (1<<UCSZ00);// | (1<<URSEL);
-}
 
 void USART0_write(unsigned char data)
 {
-	while ( !( UCSR0A & (1<<UDRE0)) ) ;
-	UDR0 = data;
+	while ( !( UCSRA & (1<<UDRE)) ) ;
+	UDR = data;
 }
 
 FILE usart_str = FDEV_SETUP_STREAM(USART0_write, NULL, _FDEV_SETUP_WRITE); // для функции printf
@@ -90,18 +81,17 @@ unsigned char search_ow_devices(void) // поиск всех устройств на шине
 }
 //*/
 /*** DUMY CODE ***/
-enum ButtonValues
-{
-	BUTTON_NONE, //0
-	BUTTON_UP,
-	BUTTON_DOWN,
-	BUTTON_LEFT,
-	BUTTON_RIGHT,
-	BUTTON_ENTER, //5
-	BUTTON_FIRE,
-	BUTTON_PUMP,
-	BUTTON_SCROLL_UP=9,
-	BUTTON_SCROLL_DOWN,
+enum ButtonValues {
+    BUTTON_NONE, //0
+    BUTTON_UP,
+    BUTTON_DOWN,
+    BUTTON_LEFT,
+    BUTTON_RIGHT,
+    BUTTON_ENTER, //5
+    BUTTON_FIRE,
+    BUTTON_PUMP,        // восьмой никогда не будет , если только из функции
+    BUTTON_SCROLL_UP=9,
+    BUTTON_SCROLL_DOWN,
 
 
 };
@@ -109,7 +99,7 @@ enum ButtonValues
 enum ButtonValues GetButtonPress()
 //enum ButtonValues KeyCode()
 {
-	return BUTTON_NONE;
+    return BUTTON_NONE;
 };
 /*** END DUMY CODE ***/
 
@@ -125,8 +115,8 @@ static void Level1Item1_Enter(void)
 static void Level1Item1_Select(void)
 {
 //	puts("SELECT");
-	nlcd_PrintF(PSTR("SELECT_MENU_1_1"));
-	nlcd_GotoXY(0,3);
+    nlcd_PrintF(PSTR("SELECT_MENU_1_1"));
+    nlcd_GotoXY(0,3);
 //	nlcd_SendByte(CMD_LCD_MODE,0xA7);
 }
 
@@ -136,24 +126,26 @@ static void Level1Item1_Select(void)
  */
 static void Generic_Write(const char* Text)
 {
-	if (Text)
-		//puts_P(Text);
+    if (Text)
+        //puts_P(Text);
 //		nlcd_Print(Text);
-		nlcd_PrintF(Text);
+        nlcd_PrintF(Text);
 }
 //         Name      Next     Previous        Parent         Child     SelectFunc   EnterFunc  Text
-MENU_ITEM(Menu_1,   Menu_2,     Menu_3,     NULL_MENU,      Menu_1_1,PositionMenuesLevel1,Level1Item1_Enter,       "1");
-MENU_ITEM(Menu_2,   Menu_3,     Menu_1,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "2");
-MENU_ITEM(Menu_3,   Menu_1,     Menu_2,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "3");
+MENU_ITEM(Menu_1,   Menu_2,     Menu_3,     NULL_MENU,      Menu_1_1,PositionMenuesLevel1,Level1Item1_Enter,       "1 FIRE");
+MENU_ITEM(Menu_2,   Menu_3,     Menu_1,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "2 VAPORIZER");
+MENU_ITEM(Menu_3,   Menu_1,     Menu_2,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "3 PUMP");
 
-MENU_ITEM(Menu_1_1, Menu_1_2,   Menu_1_2,   Menu_1,      NULL_MENU,PositionMenuesLevel2,   NULL,       "1.1");
-MENU_ITEM(Menu_1_2, Menu_1_1,   Menu_1_1,   Menu_1,      NULL_MENU,PositionMenuesLevel2,   NULL,       "1.2");
+MENU_ITEM(Menu_1_1, Menu_1_2,   Menu_1_2,   Menu_1,      NULL_MENU,PositionMenuesLevel2,   NULL,       "1.1        ");
+MENU_ITEM(Menu_1_2, Menu_1_1,   Menu_1_1,   Menu_1,      NULL_MENU,PositionMenuesLevel2,   NULL,       "1.2        ");
 
-void PositionMenuesLevel1(){
+void PositionMenuesLevel1()
+{
     nlcd_GotoXY(0,3);
 }
 
-void PositionMenuesLevel2(){
+void PositionMenuesLevel2()
+{
     nlcd_GotoXY(0,4);
 }
 // Прототипы задач ============================================================
@@ -163,13 +155,13 @@ void SwitchMenu();
 void MenuInit();
 
 //==============================================================================
-int main(void){
-    sei();
+int main(void)
+{
     //timer for keyscan initiaization
 //    TCCR2 |= (1<<CS22)|(0<<CS21)|(1<<CS20);   // устанавливаем прескалер - 1024(101) 256(100) 64(011) 8(010) 0(001) off(000)
 //   TIFR = 1<<TOV2;   // очищаем флаг прерывания таймера Т0
- //  TIMSK |= 1<<TOIE2;   // разрешаем прерывание по переполнению
- //  TCNT2 = StartFrom;    // загружаем начальное зн. в счетный регистр
+//  TIMSK |= 1<<TOIE2;   // разрешаем прерывание по переполнению
+//  TCNT2 = StartFrom;    // загружаем начальное зн. в счетный регистр
     //keyscan initialization
     InitControl();
     //lcd initialization
@@ -177,150 +169,149 @@ int main(void){
     _delay_ms(100); //delay for reset display
     // menu initialization
     MenuInit();
+    InitScheduler();
 
-    	stdout = &usart_str; // указываем, куда будет выводить printf
+//    	stdout = &usart_str; // указываем, куда будет выводить printf
 
 //	DDRB = 0b00000010; PORTB = 0b00000010;
 //	DDRC = 0b00000000; PORTC = 0b00000000;
-	DDRD = 0b00001010; PORTD = 0b00001000;
+    DDRD = 0b00001010;
+    PORTD = 0b00001000;
 
-	USART0_init(); // включаем uart
+//	USART_init(); // включаем uart
 
-	timerDelayInit();
+ //   timerDelayInit();
 
-	nDevices = search_ow_devices(); // ищем все устройства
+//	nDevices = search_ow_devices(); // ищем все устройства
 
-	printf("---------- Found %d devices ----------", nDevices);
+//	printf("---------- Found %d devices ----------", nDevices);
 
-//*
-	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
-	{
-		// узнать устройство можно по его груповому коду, который расположен в первом байте адресса
-		switch (owDevicesIDs[i][0])
-		{
-			case OW_DS18B20_FAMILY_CODE: { // если найден термодатчик DS18B20
-				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-				printf(" - Thermometer DS18B20"); // печатаем тип устройства
-				DS18x20_StartMeasureAddressed(owDevicesIDs[i]); // запускаем измерение
-				timerDelayMs(800); // ждем минимум 750 мс, пока конвентируется температура
-				unsigned char	data[2]; // переменная для хранения старшего и младшего байта данных
-				DS18x20_ReadData(owDevicesIDs[i], data); // считываем данные
-				unsigned char	themperature[3]; // в этот массив будет записана температура
-				DS18x20_ConvertToThemperature(data, themperature); // преобразовываем температуру в человекопонятный вид
-				printf(": %d.%d C", themperature[1],themperature[2]);
-				current_temp=themperature[1];
-			} break;
-			case OW_DS18S20_FAMILY_CODE: { // если найден термодатчик DS18B20
-				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-				printf(" - Thermometer DS18S20"); // печатаем тип устройства
-			} break;
+    /*
+    	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные
+    	{
+    		// узнать устройство можно по его груповому коду, который расположен в первом байте адресса
+    		switch (owDevicesIDs[i][0])
+    		{
+    			case OW_DS18B20_FAMILY_CODE: { // если найден термодатчик DS18B20
+    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+    				printf(" - Thermometer DS18B20"); // печатаем тип устройства
+    				DS18x20_StartMeasureAddressed(owDevicesIDs[i]); // запускаем измерение
+    				timerDelayMs(800); // ждем минимум 750 мс, пока конвентируется температура
+    				unsigned char	data[2]; // переменная для хранения старшего и младшего байта данных
+    				DS18x20_ReadData(owDevicesIDs[i], data); // считываем данные
+    				unsigned char	themperature[3]; // в этот массив будет записана температура
+    				DS18x20_ConvertToThemperature(data, themperature); // преобразовываем температуру в человекопонятный вид
+    				printf(": %d.%d C", themperature[1],themperature[2]);
+    				current_temp=themperature[1];
+    			} break;
+    			case OW_DS18S20_FAMILY_CODE: { // если найден термодатчик DS18B20
+    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+    				printf(" - Thermometer DS18S20"); // печатаем тип устройства
+    			} break;
 
-			case OW_DS1990_FAMILY_CODE: { // если найден электронный ключ DS1990
-				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-				printf(" - Serial button DS1990"); // печатаем тип устройства
-			} break;
-			case OW_DS2430_FAMILY_CODE: { // если найдена EEPROM
-				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-				printf(" - EEPROM DS2430"); // печатаем тип устройства
-			} break;
-			case OW_DS2413_FAMILY_CODE: { // если найден ключ
-				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
-				printf(" - Switch 2413"); // печатаем тип устройства
-			} break;
-		}
+    			case OW_DS1990_FAMILY_CODE: { // если найден электронный ключ DS1990
+    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+    				printf(" - Serial button DS1990"); // печатаем тип устройства
+    			} break;
+    			case OW_DS2430_FAMILY_CODE: { // если найдена EEPROM
+    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+    				printf(" - EEPROM DS2430"); // печатаем тип устройства
+    			} break;
+    			case OW_DS2413_FAMILY_CODE: { // если найден ключ
+    				printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+    				printf(" - Switch 2413"); // печатаем тип устройства
+    			} break;
+    		}
 
-	}
+    	}
 
-//*/
+    //*/
 
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
- //   sei();
-    while(1){ 		// Главный цикл диспетчера
- //           if(!flags.KeyPressed&&flags.KeyReleased) nlcd_PrintF(PSTR("BUTTON"));
-            //SwitchMenu();
- /*
-            if (KeyCurrentCode){
-            switch(KeyCurrentCode){
-            case 0:break;
-            case 1:nlcd_PrintF(PSTR("1"));break;
-            case 2:nlcd_PrintF(PSTR("2"));break;
-            case 3:nlcd_PrintF(PSTR("3"));break;
-            case 4:nlcd_PrintF(PSTR("4"));break;
-            case 5:nlcd_PrintF(PSTR("5"));break;
-            case 6:nlcd_PrintF(PSTR("6"));break;
-            case 7:nlcd_PrintF(PSTR("7"));break;
-            default:KeyCurrentCode=0;break;
-            }
-                KeyCurrentCode=0;
-            }
-//*/    nlcd_GotoXY(3,3);
-       // nlcd_Print(current_temp);
+    AddTask(KeyScan,Idle,25,0,0xffff);
+    AddTask(SwitchMenu,Idle,50,0,0xffff);
+//    AddTask(Idle,Idle,250,0,0xffff);
+    sei();
+    while(1) { 		// Главный цикл диспетчера
+//           if(!flags.KeyPressed&&flags.KeyReleased) nlcd_PrintF(PSTR("BUTTON"));
+        //SwitchMenu();
+        DispatchTask();
+        /*
+                   if (KeyCurrentCode){
+                   switch(KeyCurrentCode){
+                   case 0:break;
+                   case 1:nlcd_PrintF(PSTR("1"));break;
+                   case 2:nlcd_PrintF(PSTR("2"));break;
+                   case 3:nlcd_PrintF(PSTR("3"));break;
+                   case 4:nlcd_PrintF(PSTR("4"));break;
+                   case 5:nlcd_PrintF(PSTR("5"));break;
+                   case 6:nlcd_PrintF(PSTR("6"));break;
+                   case 7:nlcd_PrintF(PSTR("7"));break;
+                   default:KeyCurrentCode=0;break;
+                   }
+                       KeyCurrentCode=0;
+                   }
+        //*///    nlcd_GotoXY(3,3);
+        // nlcd_Print(current_temp);
 
     }
 
     return 0;
 }
 
-void MenuInit(){
-	/* Set up the default menu text write callback, and navigate to an absolute menu item entry. */
-	Menu_SetGenericWriteCallback(Generic_Write);
-	Menu_Navigate(&Menu_1);
+void MenuInit()
+{
+    /* Set up the default menu text write callback, and navigate to an absolute menu item entry. */
+        Menu_Navigate(&Menu_1);
+    Menu_SetGenericWriteCallback(Generic_Write); //вот тут скорее всего меняется местами время запуска вывода текста
+                                                    // и выполнения функции выполнения
+
 }
 
-void SwitchMenu(){
-		/* Example usage of Micromenu - here you can create your custom menu navigation system; you may wish to perform
-		 * other tasks while detecting key presses, enter sleep mode while waiting for user input, etc.
-		 */
-		 if (KeyCurrentCode){
+void SwitchMenu()
+{
+    /* Example usage of Micromenu - here you can create your custom menu navigation system; you may wish to perform
+     * other tasks while detecting key presses, enter sleep mode while waiting for user input, etc.
+     */
+    if (KeyCurrentCode) {
+//    if (6) {
 //		switch (GetButtonPress())
-        switch (KeyCurrentCode)
-		{
-			case BUTTON_UP:
-				Menu_Navigate(MENU_PREVIOUS);
-				break;
-			case BUTTON_DOWN:
-				Menu_Navigate(MENU_NEXT);
-				break;
-			case BUTTON_LEFT:
-				Menu_Navigate(MENU_PARENT);
-				break;
-			case BUTTON_RIGHT:
-				Menu_Navigate(MENU_CHILD);
-				break;
-			case BUTTON_ENTER:
-				Menu_EnterCurrentItem();
-				break;
-            case BUTTON_SCROLL_UP:
-                nlcd_PrintF(PSTR("SROLL_UP"));
-                break;
-            case BUTTON_SCROLL_DOWN:
-                nlcd_PrintF(PSTR("SCROLL_DOWN"));
-                break;
-            case BUTTON_FIRE:
-                nlcd_PrintF(PSTR("FIRE_ENABLE"));
-                break;
-            case BUTTON_PUMP:
-                nlcd_PrintF(PSTR("PUMP_ENABLE"));
-                break;
-			default:
-				break;
-		}
-		KeyCurrentCode=0;
-		 }
+        switch (KeyCurrentCode) {
+        case BUTTON_UP:
+            Menu_Navigate(MENU_PREVIOUS);
+            break;
+        case BUTTON_DOWN:
+            Menu_Navigate(MENU_NEXT);
+            break;
+        case BUTTON_LEFT:
+            Menu_Navigate(MENU_PARENT);
+            break;
+        case BUTTON_RIGHT:
+            Menu_Navigate(MENU_CHILD);
+            break;
+        case BUTTON_ENTER:
+            Menu_EnterCurrentItem();
+            break;
+        case BUTTON_SCROLL_UP:
+            nlcd_PrintF(PSTR("SROLL_UP"));
+            break;
+        case BUTTON_SCROLL_DOWN:
+            nlcd_PrintF(PSTR("SCROLL_DOWN"));
+            break;
+        case BUTTON_FIRE:
+            nlcd_PrintF(PSTR("FIRE_ENABLE"));
+            break;
+        case BUTTON_PUMP:
+            nlcd_PrintF(PSTR("PUMP_ENABLE"));
+            break;
+        default:
+            break;
+        }
+        KeyCurrentCode=0;
+    }
 }
 
 //char Text[] PROGMEM = "FLASH MEMORY TEST";
-
-
-ISR(TIMER0_OVF_vect){
-    TCNT2 = StartFrom;
-
-//    j++;
-    KeyScan();          //загнать эти функции в отдельный блок , исполняемый по
-    SwitchMenu();       // флагу переполнения TOV2
-//       TIFR = 1<<TOV2;
- //   TB(C,4);
-}
 
