@@ -18,14 +18,17 @@ void OthersTasks(void){
 #ifndef UART_AS_OneWire
 void OW_Set(unsigned char mode)
 {
+//    USART0_write('3');
 #ifndef OW_TWO_PINS
 	if (mode) {
-		cbi(OW_PORT, OW_BIT); 
+		cbi(OW_PORT, OW_BIT);
 		sbi(OW_DDR, OW_BIT);
+		USART0_write('2');
 	}
 	else {
-		cbi(OW_PORT, OW_BIT); 
+		cbi(OW_PORT, OW_BIT);
 		cbi(OW_DDR, OW_BIT);
+		USART0_write('1');
 	}
 #else
 	if (mode) cbi(OW_PORT, OW_BIT_OUT);
@@ -52,7 +55,7 @@ unsigned char OW_Reset(void)
 	UBRRL = USART_BAUDRATE_9600;
 	UBRRH = (USART_BAUDRATE_9600 >> 8);
 	UCSRA &= ~(1<<U2X);
-	
+
 	while(CheckBit(UCSRA, RXC)) UDR; //Зачистка буферов
 	cli();
 	UDR = 0xF0;
@@ -80,13 +83,13 @@ unsigned char OW_Reset(void)
 
 void OW_WriteBit(unsigned char bit)
 {
-#ifdef UART_AS_OneWire	
+#ifdef UART_AS_OneWire
 	//115200
 	UBRRL = USART_BAUDRATE_115200;
 	UBRRH = (USART_BAUDRATE_115200 >> 8);
-	UCSRA |= (1<<U2X);	
-	
-	unsigned char	d = 0x00;	
+	UCSRA |= (1<<U2X);
+
+	unsigned char	d = 0x00;
 	while(CheckBit(UCSRA, RXC)) UDR; //Зачистка буферов
 	if (bit) d = 0xFF;
 	cli();
@@ -95,29 +98,29 @@ void OW_WriteBit(unsigned char bit)
 	sei();
 	while(!CheckBit(UCSRA,TXC));
 	while(CheckBit(UCSRA, RXC)) UDR; //Зачистка буферов
-#else	
+#else
 	//Pull line low for 1uS
 	OW_Set(1);
 	_delay_us(1);
 	//If we want to write 1, release the line (if not will keep low)
-	if(bit) OW_Set(0); 
+	if(bit) OW_Set(0);
 	//Wait for 60uS and release the line
 	_delay_us(60);
 	OW_Set(0);
-#endif	
+#endif
 }
 
 unsigned char OW_ReadBit(void)
 {
-#ifdef UART_AS_OneWire	
+#ifdef UART_AS_OneWire
 	//115200
 	UBRRL = USART_BAUDRATE_115200;
 	UBRRH = (USART_BAUDRATE_115200 >> 8);
 	UCSRA |= (1<<U2X);
-	
+
 	unsigned char	c;
 	while(CheckBit(UCSRA, RXC)) UDR; //Зачистка буферов
-	cli();		
+	cli();
 	UDR = 0xFF;
 	UCSRA=(1<<TXC);
 	sei();
@@ -126,7 +129,7 @@ unsigned char OW_ReadBit(void)
 	c = UDR;
 	if (c>0xFE) return 1;
 	return 0;
-#else	
+#else
 	unsigned char	bit=0;
 	//Pull line low for 1uS
 	OW_Set(1);
@@ -139,7 +142,7 @@ unsigned char OW_ReadBit(void)
 	//Wait for 45uS to end and return read value
 	_delay_us(45);
 	return bit;
-#endif	
+#endif
 }
 
 #ifdef UART_AS_OneWire
@@ -150,7 +153,7 @@ unsigned char OW_WriteByte(unsigned char byte)
 	UBRRL = USART_BAUDRATE_115200;
 	UBRRH = (USART_BAUDRATE_115200 >> 8);
 	UCSRA |= (1<<U2X);
-  
+
 	do
 	{
 		unsigned char	d = 0x00;
@@ -165,7 +168,7 @@ unsigned char OW_WriteByte(unsigned char byte)
 		if (UDR>0xFE) byte|=128;
 	}
 	while(--i);
-	
+
 	return byte&255;
 }
 #else
@@ -179,38 +182,38 @@ unsigned char OW_ReadByte(void)
 	unsigned char n=0;
 
 	for (unsigned char i=0; i<8; i++) if (OW_ReadBit()) sbi(n, i);
-	
+
 	return n;
 }
 #endif
 
 unsigned char OW_SearchROM( unsigned char diff, unsigned char *id )
-{ 	
+{
 	unsigned char i, j, next_diff;
 	unsigned char b;
 
-	if(!OW_Reset()) 
+	if(!OW_Reset())
 		return OW_PRESENCE_ERR;       // error, no device found
 
 	OW_WriteByte(OW_CMD_SEARCHROM);     // ROM search command
 	next_diff = OW_LAST_DEVICE;      // unchanged on last device
-	
+
 	i = OW_ROMCODE_SIZE * 8;         // 8 bytes
-	do 
-	{	
+	do
+	{
 		j = 8;                        // 8 bits
-		do 
-		{ 
+		do
+		{
 			b = OW_ReadBit();			// read bit
-			if( OW_ReadBit() ) 
+			if( OW_ReadBit() )
 			{ // read complement bit
 				if( b )                 // 11
 				return OW_DATA_ERR;  // data error
 			}
-			else 
-			{ 
+			else
+			{
 				if( !b ) { // 00 = 2 devices
-				if( diff > i || ((*id & 1) && diff != i) ) { 
+				if( diff > i || ((*id & 1) && diff != i) ) {
 						b = 1;               // now 1
 						next_diff = i;       // next pass 0
 					}
@@ -220,10 +223,10 @@ unsigned char OW_SearchROM( unsigned char diff, unsigned char *id )
          *id >>= 1;
          if( b ) *id |= 0x80;			// store bit
          i--;
-		} 
+		}
 		while( --j );
 		id++;                            // next byte
-    } 
+    }
 	while( i );
 	return next_diff;                  // to continue search
 }
@@ -235,7 +238,7 @@ void OW_FindROM(unsigned char *diff, unsigned char id[])
 		*diff = OW_SearchROM( *diff, &id[0] );
     	if ( *diff==OW_PRESENCE_ERR || *diff==OW_DATA_ERR ||
     		*diff == OW_LAST_DEVICE ) return;
-    	//if ( id[0] == DS18B20_ID || id[0] == DS18S20_ID ) 
+    	//if ( id[0] == DS18B20_ID || id[0] == DS18S20_ID )
 		return;
     }
 }
@@ -254,7 +257,7 @@ unsigned char OW_ReadROM(unsigned char *buffer)
 unsigned char OW_MatchROM(unsigned char *rom)
 {
  	if (!OW_Reset()) return 0;
-	OW_WriteByte(OW_CMD_MATCHROM);	
+	OW_WriteByte(OW_CMD_MATCHROM);
 	for(unsigned char i=0; i<8; i++)
 	{
 		OW_WriteByte(rom[i]);

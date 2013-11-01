@@ -26,7 +26,7 @@
 	#define OW_PORT PORTD
 	#define OW_PIN PIND
 	#ifndef OW_TWO_PINS //если используется один пин, укажите его номер
-		#define OW_BIT 0
+		#define OW_BIT 2
 	#else // если используются 2 пина, укажите их номера
 		#define OW_BIT_OUT 3
 		#define OW_BIT_IN 2

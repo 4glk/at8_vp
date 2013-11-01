@@ -104,6 +104,7 @@ void nlcd_Clear(void)
 //  c: значение передаваемого байта
 void nlcd_SendByte(char mode,unsigned char c)
 {
+//    cli();
     CS_LCD_RESET;
     SCLK_LCD_RESET;
 
@@ -142,6 +143,7 @@ void nlcd_SendByte(char mode,unsigned char c)
     }
 
     CS_LCD_SET;
+ //   sei();
 }
 
 //******************************************************************************
@@ -149,6 +151,7 @@ void nlcd_SendByte(char mode,unsigned char c)
 //  c: код символа
 void nlcd_Putc(unsigned char c)
 {
+    cli();
 	if (c>127) c=c-64; 	// Переносим символы кирилицы в кодировке CP1251 в начало второй
 						// половины таблицы ASCII (начиная с кода 0x80)
 
@@ -156,6 +159,7 @@ void nlcd_Putc(unsigned char c)
 		 nlcd_SendByte(DATA_LCD_MODE,pgm_read_byte(&(nlcd_Font[c-32][i])));
 
 	nlcd_SendByte(DATA_LCD_MODE,0x00); // Зазор между символами по горизонтали в 1 пиксель
+	sei();
 }
 #ifdef WIDECHAR
 //******************************************************************************

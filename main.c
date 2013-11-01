@@ -3,6 +3,7 @@
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
+#include <avr/wdt.h>
 #include "macros.h"             // мои макросы и битовые поля
 #include "lcd/nokia1100_lcd_lib.h"	// Подключаем драйвер LCD-контроллера NOKIA1100
 #include "menu/MicroMenu.h"          // микроменю
@@ -13,8 +14,11 @@
 #include "onewire/delay.h"
 #include "onewire/onewire.h"
 #include "onewire/ds18x20.h"
+#include "onewire/delay.h"
 #include "sheduler/dispatch.h"
 #include "usart/usart.h"
+
+#define TASCII(numb) (numb+48)
 // TODO: разобраться с инициализацией и переключением платформы
 //#define StartFrom       0xF0 //для 1 мс 1КГц            //на большой частоте висит в убр регистре
 
@@ -41,6 +45,8 @@ void PositionMenuesLevel1();
 void PositionMenuesLevel2();
 uint16_t current_temp=100;
 extern void usartDebug();
+extern void readTemperature();
+
 //int j=0;
 
 /*** DUMY CODE ***/
@@ -117,8 +123,10 @@ void PositionMenuesLevel2()
 void SwitchMenu();
 void MenuInit();
 void usartPrint(){
-    USART0_write('P');
+
 }
+
+//    FILE usart_str = FDEV_SETUP_STREAM(USART0_write, NULL, _FDEV_SETUP_WRITE); // для функции printf
 //==============================================================================
 int main(void)
 {
@@ -129,20 +137,23 @@ int main(void)
     InitScheduler();
 //  DDRD = 0b00001010;
 //    PORTD = 0b00001000;
-    OW_Set(2);
+
 	USART_init(); // включаем uart
- //   timerDelayInit();
+    timerDelayInit();
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
-    FILE usart_str = FDEV_SETUP_STREAM(USART0_write, NULL, _FDEV_SETUP_WRITE); // для функции printf
-    	stdout = &usart_str; // указываем, куда будет выводить printf
-    AddTask(KeyScan,Idle,10,0,0xffff);
+
+//    stdout = &usart_str; // указываем, куда будет выводить printf
+    AddTask(KeyScan,Idle,5,0,0xffff);
     AddTask(SwitchMenu,Idle,25,0,0xffff);
-    AddTask(usartPrint,Idle,250,0,0xffff);
+//    AddTask(usartPrint,Idle,250,0,0xffff);
 //    void usartDebug();
  //    nlcd_Print(current_temp);
+    usartDebug();
     sei();
+        USART0_write('D');
+//    printf("Debug start");
     while(1) { 		// Главный цикл диспетчера
         DispatchTask();
 //        nlcd_Print(current_temp);
@@ -167,12 +178,16 @@ void SwitchMenu()
     if (KeyCurrentCode) {
 //    if (6) {
 //		switch (GetButtonPress())
+        USART0_write('K');
         switch (KeyCurrentCode) {
         case BUTTON_UP:
             Menu_Navigate(MENU_PREVIOUS);
+            USART0_write('U');
             break;
         case BUTTON_DOWN:
             Menu_Navigate(MENU_NEXT);
+//            printf("Down");
+            USART0_write('D');
             break;
         case BUTTON_LEFT:
             Menu_Navigate(MENU_PARENT);
@@ -190,7 +205,7 @@ void SwitchMenu()
         case BUTTON_SCROLL_DOWN:
             nlcd_PrintF(PSTR("SCROLL_DOWN"));
 //            usartDebug();
-            printf("Debug USART");
+//            printf("Debug USART");
             break;
         case BUTTON_FIRE:
             nlcd_PrintF(PSTR("FIRE_ENABLE"));
