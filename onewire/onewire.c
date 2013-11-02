@@ -3,12 +3,12 @@
 #ifdef UART_AS_OneWire
 	#include <avr/interrupt.h>
 #endif
-
+/*
 #define sbi(reg,bit) reg |= (1<<bit)
 #define cbi(reg,bit) reg &= ~(1<<bit)
 #define ibi(reg,bit) reg ^= (1<<bit)
 #define CheckBit(reg,bit) (reg&(1<<bit))
-
+//*/
 //extern void RunTasks(unsigned char tasks);
 
 void OthersTasks(void){

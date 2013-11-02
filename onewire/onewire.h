@@ -29,11 +29,12 @@
 	#ifndef OW_TWO_PINS //если используется один пин, укажите его номер
 		#define OW_BIT 2
 //		    sbi(OW_DDR,OW_BIT);
-//            sbi(OW_PORT,OW_BIT);
+//          sbi(OW_PORT,OW_BIT);
 	#else // если используются 2 пина, укажите их номера
 		#define OW_BIT_OUT 3
 		#define OW_BIT_IN 2
-//    sbi(OW_DDR,OW_BIT_OUT);
+//        DDRD|=(1<<3);
+//        OW_PORT|=(1<<3);
 //    sbi(OW_PORT,OW_BIT_OUT);
 //    cbi(OW_DDR,OW_BIT_IN);
 //    cbi(OW_PORT,OW_BIT_IN);

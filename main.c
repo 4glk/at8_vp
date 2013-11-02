@@ -14,7 +14,7 @@
 #include "onewire/delay.h"
 #include "onewire/onewire.h"
 #include "onewire/ds18x20.h"
-#include "onewire/delay.h"
+//#include "onewire/delay.h"
 #include "sheduler/dispatch.h"
 #include "usart/usart.h"
 
@@ -140,24 +140,35 @@ int main(void)
 //    PORTD = 0b00001000;
 	#ifndef OW_TWO_PINS //если используется один пин, укажите его номер
 //		#define OW_BIT 2
-		    sbi(OW_DDR,OW_BIT);
-            sbi(OW_PORT,OW_BIT);
-	#else // если используются 2 пина, укажите их номера
-//		#define OW_BIT_OUT 2
-//		#define OW_BIT_IN 3
+//		    sbi(OW_DDR,OW_BIT);
+//            sbi(OW_PORT,OW_BIT);
+//                DDRD|=(1<<3);
+                OW_DDR|=(1<<OW_BIT);
+                OW_PORT|=(1<<OW_BIT);
+//#define OW_ONE_PIN_MASK  (_BV(OW_BIT));
+#else // если используются 2 пина, укажите их номера
+		#define OW_BIT_OUT 3
+		#define OW_BIT_IN 2
+                OW_DDR|=(1<<OW_BIT_OUT);
+                OW_PORT|=(1<<OW_BIT_OUT);
+                OW_DDR&= ~(1<<OW_BIT_IN);
+                OW_PORT&= ~(1<<OW_BIT_IN);
 
+//#define OW_TWO_PINS_MASK        (_BV(OW_BIT_OUT)|(!_BV(OW_BIT_IN)));
+                     //макросы не пашут , так что будет вот так
+//        OW_DDR|=(1<<OW_BIT_OUT);
 //    sbi((OW_DDR),(OW_BIT_OUT));
 //    sbi(OW_PORT,OW_BIT_OUT);
 //    cbi(OW_DDR,OW_BIT_IN);
 //    cbi(OW_PORT,OW_BIT_IN);
 
-	#endif
+#endif
 	USART_init(); // включаем uart
     timerDelayInit();
 //    DisplayHelloScreen();
 //    KeyScan();
 //    nlcd_PrintF(PSTR("HELLO!!!"));
-//    sbi((OW_DDR),(OW_BIT_OUT));
+//    sbi(OW_DDR,OW_BIT_OUT);
 //    sbi(OW_PORT,OW_BIT_OUT);
 //    cbi(OW_DDR,OW_BIT_IN);
 //    cbi(OW_PORT,OW_BIT_IN);
