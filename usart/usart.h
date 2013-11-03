@@ -12,3 +12,4 @@
 //unsigned char	nDevices;	// количество сенсоров
 //unsigned char	owDevicesIDs[MAXDEVICES][8];	// Их ID
 void USART0_write(unsigned char data);
+void USART_Print(const char *USART_String);

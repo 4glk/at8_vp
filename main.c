@@ -46,20 +46,24 @@
 extern void USART0_write(unsigned char data);
 extern void USART_init();
 extern void InitScheduler (void);
-//extern void MenuInit();
-extern void forMenuInit();
+extern void MenuInit();
 extern void InitControl();
-extern void nlcd_Init();
+extern void usartDebug();
+extern void timerDelayInit();
+//extern void nlcd_Init();
 
 int main(void)
 {
     USART_init();
     InitScheduler();
     InitControl();
-    nlcd_Init();
-//    MenuInit();  // перенес в kbd.c
-    forMenuInit();
-
+ //   nlcd_Init();
+    MenuInit();
+    timerDelayInit();
+//    forMenuInit();
+    usartDebug();
+    AddTask(KeyScan,50);
+    AddTask(SwitchMenu,100);
     sei();
     while(1) {
         DispatchTask();

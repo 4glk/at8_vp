@@ -66,38 +66,26 @@
 		<Unit filename="menu/MenuConfig.h" />
 		<Unit filename="menu/MicroMenu.c">
 			<Option compilerVar="CC" />
-			<Option compile="0" />
-			<Option link="0" />
 		</Unit>
 		<Unit filename="menu/MicroMenu.h" />
 		<Unit filename="menu/menu.c">
 			<Option compilerVar="CC" />
-			<Option compile="0" />
-			<Option link="0" />
 		</Unit>
 		<Unit filename="menu/menu.h" />
 		<Unit filename="onewire/OWfunc.c">
 			<Option compilerVar="CC" />
-			<Option compile="0" />
-			<Option link="0" />
 		</Unit>
 		<Unit filename="onewire/OWfunc.h" />
 		<Unit filename="onewire/delay.c">
 			<Option compilerVar="CC" />
-			<Option compile="0" />
-			<Option link="0" />
 		</Unit>
 		<Unit filename="onewire/delay.h" />
 		<Unit filename="onewire/ds18x20.c">
 			<Option compilerVar="CC" />
-			<Option compile="0" />
-			<Option link="0" />
 		</Unit>
 		<Unit filename="onewire/ds18x20.h" />
 		<Unit filename="onewire/onewire.c">
 			<Option compilerVar="CC" />
-			<Option compile="0" />
-			<Option link="0" />
 		</Unit>
 		<Unit filename="onewire/onewire.h" />
 		<Unit filename="sheduler/dispatch.c">

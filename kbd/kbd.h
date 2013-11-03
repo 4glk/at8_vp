@@ -31,6 +31,7 @@ void KeyState();
 void KeyScan();
 
 uint8_t KeyCurrentCode;
+extern void AddTask (void (*taskfunc)(void), uint16_t taskdelay);;
 //extern void MenuInit();
 //#pragma once
 //static uint8_t k=0;

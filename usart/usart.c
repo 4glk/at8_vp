@@ -8,4 +8,11 @@ void USART0_write(unsigned char data){
 	UDR = data;
 }
 
-//    FILE usart_str = FDEV_SETUP_STREAM(USART0_write, NULL, _FDEV_SETUP_WRITE); // для функции printf
+
+void USART_Print(const char *USART_String) {
+ uint8_t c;
+ while ((c=*USART_String++))
+ {
+ USART0_write(c);
+ }
+ }//USART_Print
