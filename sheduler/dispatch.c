@@ -7,31 +7,37 @@ void AddTask (void (*taskfunc)(void), uint16_t taskdelay){
    while (((TaskArray[n].pfunc!=0)||(TaskArray[n].countdown!=0))&&(TaskArray[n].countdown<=((taskdelay==0)?(++taskdelay):(taskdelay))&&(n < MAXnTASKS)))n++;
     position=n;
    while ((TaskArray[n].pfunc != 0) && (TaskArray[n].countdown!=0) && (n < MAXnTASKS))n++;
+
    for (/*.*/;n>position;n--){TaskArray[n]=TaskArray[n-1];}
         TaskArray[position].pfunc = taskfunc;
         TaskArray[position].countdown = taskdelay;
-    delay_time=TaskArray[0].countdown;
+       if (n==0){ delay_time=TaskArray[0].countdown;dt=delay_time;}
+// при добавлении нужно обновлять счетчик, тк там старое значение
 }
 
 void DispatchTask (void){
     uint8_t n=0;
-    if (flags.RunFlag==1&&TaskArray[n].pfunc != 0){                     // если таймер выставил флаг
-        task tmp;                       // переменная для хранения нулевого элемента
+    if (flags.RunFlag==1&&TaskArray[0].pfunc != 0){
+        task tmp;
         tmp=TaskArray[0];
+        //сдвигаем очередь и затираем первое в  очереди , т.к. оно у нас уже на запуске
     while (((TaskArray[n].pfunc != 0) || (TaskArray[n].countdown!=0)) && (n < MAXnTASKS)){
-        n++; //мотаем пока счетчик не дойдет до задачи с нужной задержкой
+        n++;
         TaskArray[n-1]=TaskArray[n];        //сдвигаем очередь вперед
         if (TaskArray[n-1].countdown) TaskArray[n-1].countdown-=dt;     //вычитаем прошедшее время из каждой задачи
    }
-//    DeleteTask(n);      //удаляем последнюю задачу
+
 // срыв когда очередь пустая
-    if (TaskArray[0].pfunc != 0&&TaskArray[0].countdown!=0) {delay_time=TaskArray[0].countdown; // если здесь +1 , то немного работает ))))
-   // else return;//{delay_time=1;} //можно флаг запуска добавить сюда , но в очереди будет нечего убавлять и ф-ию зациклит
-    dt=delay_time;      //или воткнуть туда значение уменьшения , только его нужно брать для точности
-    }    //USART0_write(dt);
-    (*tmp.pfunc)();
-          //из расчета кол-ва тиков выполняемой функции и частоты прерывания таймера
-   } flags.RunFlag=0;
+    if (TaskArray[0].pfunc != 0) {
+            delay_time=TaskArray[0].countdown;
+            dt=delay_time;
+    }
+ //   if (TaskArray[0].pfunc != 0&&TaskArray[0].countdown==0){
+ //           delay_time=TaskArray[0].countdown+1;
+
+    if (*tmp.pfunc!=0)(*tmp.pfunc)();
+    flags.RunFlag=0;
+   }
 }
 
 void DeleteTask (uint8_t j)

@@ -54,9 +54,9 @@ int main(void)
 
 
 //    usartWrite();
-    AddTask(usartWrite,15);
-    AddTask(usartWrite1,15);
-    AddTask(usartStartMsg,50);
+    AddTask(usartWrite,150);
+    AddTask(usartWrite1,1500);
+    AddTask(usartStartMsg,500);
     sei();
     while(1) { 		// Главный цикл диспетчера
         DispatchTask();
@@ -68,12 +68,12 @@ int main(void)
 
 void usartWrite(){
     USART0_write('D');
-    AddTask(usartWrite,50);
+    AddTask(usartWrite,500);
 }
 
 void usartWrite1(){
     USART0_write('S');
-    AddTask(usartWrite1,1000);
+    AddTask(usartWrite1,2500);
 }
 
 void usartStartMsg(){
