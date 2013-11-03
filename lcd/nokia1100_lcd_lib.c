@@ -23,7 +23,7 @@
 #define ClearBit(reg, bit)       reg &= (~(1<<(bit)))
 #define SetBit(reg, bit)         reg |= (1<<(bit))
 #define InvBit(reg, bit)         reg ^= 1<<bit
-
+//char Text[] PROGMEM = "FLASH MEMORY TEST";
 //******************************************************************************
 // Инициализация контроллера
 void nlcd_Init(void)

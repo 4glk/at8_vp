@@ -1,4 +1,49 @@
 #include "dispatch.h"
+//delay_time=50;
+#ifdef LSHED
+void AddTask (void (*taskfunc)(void), uint16_t taskdelay){
+   uint8_t n=0;
+   uint8_t position=0;
+   while (((TaskArray[n].pfunc!=0)||(TaskArray[n].countdown!=0))&&(TaskArray[n].countdown<=((taskdelay==0)?(++taskdelay):(taskdelay))&&(n < MAXnTASKS)))n++;
+    position=n;
+   while ((TaskArray[n].pfunc != 0) && (TaskArray[n].countdown!=0) && (n < MAXnTASKS))n++;
+   for (/*.*/;n>position;n--){TaskArray[n]=TaskArray[n-1];}
+        TaskArray[position].pfunc = taskfunc;
+        TaskArray[position].countdown = taskdelay;
+    delay_time=TaskArray[0].countdown;
+}
+
+void DispatchTask (void){
+    uint8_t n=0;
+    if (flags.RunFlag==1&&TaskArray[n].pfunc != 0){                     // если таймер выставил флаг
+        task tmp;                       // переменная для хранения нулевого элемента
+        tmp=TaskArray[0];
+    while (((TaskArray[n].pfunc != 0) || (TaskArray[n].countdown!=0)) && (n < MAXnTASKS)){
+        n++; //мотаем пока счетчик не дойдет до задачи с нужной задержкой
+        TaskArray[n-1]=TaskArray[n];        //сдвигаем очередь вперед
+        if (TaskArray[n-1].countdown) TaskArray[n-1].countdown-=dt;     //вычитаем прошедшее время из каждой задачи
+   }
+//    DeleteTask(n);      //удаляем последнюю задачу
+// срыв когда очередь пустая
+    if (TaskArray[0].pfunc != 0&&TaskArray[0].countdown!=0) {delay_time=TaskArray[0].countdown; // если здесь +1 , то немного работает ))))
+   // else return;//{delay_time=1;} //можно флаг запуска добавить сюда , но в очереди будет нечего убавлять и ф-ию зациклит
+    dt=delay_time;      //или воткнуть туда значение уменьшения , только его нужно брать для точности
+    }    //USART0_write(dt);
+    (*tmp.pfunc)();
+          //из расчета кол-ва тиков выполняемой функции и частоты прерывания таймера
+   } flags.RunFlag=0;
+}
+
+void DeleteTask (uint8_t j)
+{
+   TaskArray[j].pfunc = 0x0000;
+   TaskArray[j].countdown=0;
+//   TaskArray[j].delay = 0;
+//    usartWrite('S');
+}
+
+
+#endif // LSHED
 // TODO: сделать несколько вариантов диспетчера с выбором легкий, нормальный, весь зоопарк
 //TODO: макрос на последовательное выполнение нескольких функций (несколько функций и несколько параметров)
 // ввести функцию фриз (Freeze) т.е. увеличивать время задержки выбранной следующей и в данный момент выполняемой
@@ -15,6 +60,7 @@
 // другой вариант это куча костылей на каждую функцию , получится слишком громоздко , но зато для меня проще в реализации
 //             || || || || || || ||
 //             \/ \/ \/ \/ \/ \/ \/
+#ifndef LSHED
 void AddTask (void (*taskfunc)(void),void (*nextfunc)(void), uint16_t taskdelay,uint16_t nextdelay,uint16_t taskruns){
    uint8_t n=0;
    uint8_t position=0;
@@ -90,6 +136,7 @@ void DeleteTask (uint8_t j)
    TaskArray[j].numRun =0;
    TaskArray[j].nextdelay=0;
 }
+#endif
 
 void Idle(){
 
