@@ -15,7 +15,7 @@
 //#define UART_AS_OneWire
 
 // Если для эмуляции 1-wire не спольльзуется USART, но используется 2 пина (вход и выход)
-#define OW_TWO_PINS
+//#define OW_TWO_PINS
 
 #ifdef UART_AS_OneWire
 	#define USART_BAUDRATE_57600 (((F_CPU / (57600 * 16UL))) - 1)

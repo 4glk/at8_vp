@@ -143,16 +143,18 @@ int main(void)
 //		    sbi(OW_DDR,OW_BIT);
 //            sbi(OW_PORT,OW_BIT);
 //                DDRD|=(1<<3);
-                OW_DDR|=(1<<OW_BIT);
-                OW_PORT|=(1<<OW_BIT);
+ //               OW_DDR|=(1<<OW_BIT);
+//                OW_PORT|=(1<<OW_BIT);
+//                OW_DDR&=~(1<<OW_BIT);
+//                OW_PORT&=~(1<<OW_BIT);
 //#define OW_ONE_PIN_MASK  (_BV(OW_BIT));
 #else // если используются 2 пина, укажите их номера
 		#define OW_BIT_OUT 3
 		#define OW_BIT_IN 2
-                OW_DDR|=(1<<OW_BIT_OUT);
-                OW_PORT|=(1<<OW_BIT_OUT);
-                OW_DDR&= ~(1<<OW_BIT_IN);
-                OW_PORT&= ~(1<<OW_BIT_IN);
+ //               OW_DDR|=(1<<OW_BIT_OUT);
+ //               OW_PORT|=(1<<OW_BIT_OUT);
+ //               OW_DDR&= ~(1<<OW_BIT_IN);
+ //               OW_PORT&= ~(1<<OW_BIT_IN);
 
 //#define OW_TWO_PINS_MASK        (_BV(OW_BIT_OUT)|(!_BV(OW_BIT_IN)));
                      //макросы не пашут , так что будет вот так
