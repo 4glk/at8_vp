@@ -32,11 +32,11 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-std=c99 -mmcu=atmega32" />
+			<Add option="-std=c99 -mmcu=atmega8" />
 			<Add option="-DF_CPU=8000000UL" />
 		</Compiler>
 		<Linker>
-			<Add option="-mmcu=atmega32" />
+			<Add option="-mmcu=atmega8" />
 			<Add option="-Wl,-Map=$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).map,--cref" />
 		</Linker>
 		<ExtraCommands>
@@ -52,15 +52,11 @@
 		<Unit filename="at8_vp.DSN" />
 		<Unit filename="kbd/kbd.c">
 			<Option compilerVar="CC" />
-			<Option compile="0" />
-			<Option link="0" />
 		</Unit>
 		<Unit filename="kbd/kbd.h" />
 		<Unit filename="lcd/nokia1100_lcd_fnt.h" />
 		<Unit filename="lcd/nokia1100_lcd_lib.c">
 			<Option compilerVar="CC" />
-			<Option compile="0" />
-			<Option link="0" />
 		</Unit>
 		<Unit filename="lcd/nokia1100_lcd_lib.h" />
 		<Unit filename="macros.h" />

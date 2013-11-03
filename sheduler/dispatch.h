@@ -4,7 +4,7 @@
 //#include <stdbool.h>
 //#include "../HAL.h"
 
-#define LSHED
+#define LSHED  // легкая версия диспетчера 900 байт с отладкой по юсарту и битовыми полями
 
 #pragma once
 
@@ -23,7 +23,7 @@ typedef struct task{
 
 uint16_t delay_time;   // задержка до старта , штоб счетчик не ушел в минус
 uint16_t dt;
-extern void USART0_write(unsigned char data);
+//extern void USART0_write(unsigned char data);
 // максимальное количество задач
 #define MAXnTASKS       8
 //Константа для UART`a

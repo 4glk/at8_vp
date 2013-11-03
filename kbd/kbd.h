@@ -2,6 +2,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "../macros.h"          // "../" -родительский каталог , "./" - текущий каталог
+#include "../menu/menu.h"
 
 
 #define KEY_DDR     DDRB
@@ -28,7 +29,9 @@
 void InitControl();
 void KeyState();
 void KeyScan();
-volatile static uint8_t k=0;
-uint8_t KeyCurrentCode;
 
+uint8_t KeyCurrentCode;
+//extern void MenuInit();
+//#pragma once
+//static uint8_t k=0;
 

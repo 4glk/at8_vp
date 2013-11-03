@@ -27,14 +27,10 @@ void DispatchTask (void){
         if (TaskArray[n-1].countdown) TaskArray[n-1].countdown-=dt;     //вычитаем прошедшее время из каждой задачи
    }
 
-// срыв когда очередь пустая
     if (TaskArray[0].pfunc != 0) {
             delay_time=TaskArray[0].countdown;
             dt=delay_time;
     }
- //   if (TaskArray[0].pfunc != 0&&TaskArray[0].countdown==0){
- //           delay_time=TaskArray[0].countdown+1;
-
     if (*tmp.pfunc!=0)(*tmp.pfunc)();
     flags.RunFlag=0;
    }

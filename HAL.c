@@ -20,7 +20,7 @@ void InitScheduler (void){
    TIFR = 1<<TOV0;   // очищаем флаг прерывания таймера Т0
    TIMSK |= 1<<TOIE2;   // разрешаем прерывание по переполнению
    TCNT2 = StartFrom;    // загружаем начальное зн. в счетный регистр
-   for (i=0; i<MAXnTASKS; i++) DeleteTask(i);   // очищаем массив задач
+//   for (i=0; i<MAXnTASKS; i++) DeleteTask(i);   // очищаем массив задач
 }
 
 void USART_init()

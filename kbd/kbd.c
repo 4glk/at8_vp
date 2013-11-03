@@ -12,6 +12,7 @@ void InitControl(){
     KEY_PORT |= KEY_MASK;
 	KEY_DDR &= ~ KEY_MASK;
 #endif
+//MenuInit();
 }
 //*/
 /*
@@ -37,7 +38,7 @@ void KeyState(){
 }
 
 void KeyScan(){
- //   volatile static uint8_t k=0;
+    volatile static uint8_t k=0;
   if(KEY_CODE){ // обработчик нажатия
     flags.KeyReleased=0;
         if (++k >=2 ) {      //короткое нажатие 100-250 миллисекунд

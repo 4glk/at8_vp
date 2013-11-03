@@ -6,9 +6,11 @@
 //#include <stdio.h>
 //#include <avr/wdt.h>
 #include "macros.h"             // мои макросы и битовые поля
-//#include "lcd/nokia1100_lcd_lib.h"	// Подключаем драйвер LCD-контроллера NOKIA1100
-//#include "menu/MicroMenu.h"          // микроменю
-//#include "kbd/kbd.h"                // мои кнопки
+#include "lcd/nokia1100_lcd_lib.h"	// Подключаем драйвер LCD-контроллера NOKIA1100
+#include "menu/menu.h"          // микроменю
+//#include "menu/MicroMenu.h"
+//#include "menu/MenuConfig.h"
+#include "kbd/kbd.h"                // мои кнопки
 //#include "onewire/delay.h"    // OW interface
 //#include "onewire/onewire.h"
 //#include "onewire/ds18x20.h"
@@ -39,47 +41,30 @@
 /// не забыть конечно про внешнюю логику и пиродатчик или фото резистор
 
 //==============================================================================
-void usartWrite();
-void usartWrite1();
-void usartStartMsg();
+
 
 extern void USART0_write(unsigned char data);
 extern void USART_init();
 extern void InitScheduler (void);
+//extern void MenuInit();
+extern void forMenuInit();
+extern void InitControl();
+extern void nlcd_Init();
 
 int main(void)
 {
     USART_init();
     InitScheduler();
+    InitControl();
+    nlcd_Init();
+//    MenuInit();  // перенес в kbd.c
+    forMenuInit();
 
-
-//    usartWrite();
-    AddTask(usartWrite,150);
-    AddTask(usartWrite1,1500);
-    AddTask(usartStartMsg,500);
     sei();
-    while(1) { 		// Главный цикл диспетчера
+    while(1) {
         DispatchTask();
-//        nlcd_Print(current_temp);
     }
 
     return 0;
 }
 
-void usartWrite(){
-    USART0_write('D');
-    AddTask(usartWrite,500);
-}
-
-void usartWrite1(){
-    USART0_write('S');
-    AddTask(usartWrite1,2500);
-}
-
-void usartStartMsg(){
-    USART0_write('S');
-    USART0_write('T');
-    USART0_write('A');
-    USART0_write('R');
-    USART0_write('T');
-}
