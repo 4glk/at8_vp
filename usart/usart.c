@@ -4,8 +4,8 @@
 //*
 
 void USART0_write(unsigned char data){
-	while ( !( UCSR0A & (1<<UDRE0)) ) ;
-	UDR0 = data;
+	while ( !( UCSRA & (1<<UDRE)) ) ;
+	UDR = data;
 }
 
 void readTemperature(){

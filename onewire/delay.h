@@ -8,7 +8,7 @@
 #ifdef RUN_TASKS
 	extern void RunTasks(void);
 #endif
-#define ATMEGA328
+#define ATMEGA8
 #ifndef F_CPU
 	#warning F_CPU not defined
 #elif (F_CPU<2020000)

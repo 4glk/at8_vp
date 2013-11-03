@@ -11,7 +11,7 @@
 //#define ATMEGA8
 
 // atmega328p
-#define ATMEGA328
+#define ATMEGA8
 
 // битовые поля
 #pragma once

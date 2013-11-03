@@ -50,20 +50,20 @@ unsigned char OW_CheckIn(void)
 unsigned char OW_Reset(void)
 {
 #ifdef UART_AS_OneWire
-	UCSRB=(1<<RXEN)|(1<<TXEN);
+	UCSR0B=(1<<RXEN0)|(1<<TXEN0);
 	//9600
-	UBRRL = USART_BAUDRATE_9600;
-	UBRRH = (USART_BAUDRATE_9600 >> 8);
-	UCSRA &= ~(1<<U2X);
+	UBRR0L = USART_BAUDRATE_9600;
+	UBRR0H = (USART_BAUDRATE_9600 >> 8);
+	UCSR0A &= ~(1<<U2X0);
 
-	while(CheckBit(UCSRA, RXC)) UDR; //Зачистка буферов
+	while(CheckBit(UCSR0A, RXC0)) UDR0; //Зачистка буферов
 	cli();
-	UDR = 0xF0;
-	UCSRA = (1<<TXC);
+	UDR0 = 0xF0;
+	UCSR0A = (1<<TXC0);
 	sei();
 	//while(!CheckBit(UCSRA, TXC)) OthersTasks();
-	while(!CheckBit(UCSRA, RXC)) OthersTasks();
-	if (UDR != 0xF0) return 1;
+	while(!CheckBit(UCSR0A, RXC0)) OthersTasks();
+	if (UDR0 != 0xF0) return 1;
  return 0;
 #else
 	unsigned char	status;
@@ -85,19 +85,19 @@ void OW_WriteBit(unsigned char bit)
 {
 #ifdef UART_AS_OneWire
 	//115200
-	UBRRL = USART_BAUDRATE_115200;
-	UBRRH = (USART_BAUDRATE_115200 >> 8);
-	UCSRA |= (1<<U2X);
+	UBRR0L = USART_BAUDRATE_115200;
+	UBRR0H = (USART_BAUDRATE_115200 >> 8);
+	UCSR0A |= (1<<U2X0);
 
 	unsigned char	d = 0x00;
-	while(CheckBit(UCSRA, RXC)) UDR; //Зачистка буферов
+	while(CheckBit(UCSR0A, RXC0)) UDR0; //Зачистка буферов
 	if (bit) d = 0xFF;
 	cli();
-	UDR = d;
-	UCSRA=(1<<TXC);
+	UDR0 = d;
+	UCSR0A=(1<<TXC0);
 	sei();
-	while(!CheckBit(UCSRA,TXC));
-	while(CheckBit(UCSRA, RXC)) UDR; //Зачистка буферов
+	while(!CheckBit(UCSR0A,TXC0));
+	while(CheckBit(UCSR0A, RXC0)) UDR0; //Зачистка буферов
 #else
 	//Pull line low for 1uS
 	OW_Set(1);
@@ -114,19 +114,19 @@ unsigned char OW_ReadBit(void)
 {
 #ifdef UART_AS_OneWire
 	//115200
-	UBRRL = USART_BAUDRATE_115200;
-	UBRRH = (USART_BAUDRATE_115200 >> 8);
-	UCSRA |= (1<<U2X);
+	UBRR0L = USART_BAUDRATE_115200;
+	UBRR0H = (USART_BAUDRATE_115200 >> 8);
+	UCSR0A |= (1<<U2X0);
 
 	unsigned char	c;
-	while(CheckBit(UCSRA, RXC)) UDR; //Зачистка буферов
+	while(CheckBit(UCSR0A, RXC0)) UDR0; //Зачистка буферов
 	cli();
-	UDR = 0xFF;
-	UCSRA=(1<<TXC);
+	UDR0 = 0xFF;
+	UCSR0A=(1<<TXC0);
 	sei();
-	while(!CheckBit(UCSRA, TXC));
-	while(!CheckBit(UCSRA, RXC));
-	c = UDR;
+	while(!CheckBit(UCSR0A, TXC0));
+	while(!CheckBit(UCSR0A, RXC0));
+	c = UDR0;
 	if (c>0xFE) return 1;
 	return 0;
 #else
@@ -150,22 +150,22 @@ unsigned char OW_WriteByte(unsigned char byte)
 {
 	unsigned char	i = 8;
 	//115200
-	UBRRL = USART_BAUDRATE_115200;
-	UBRRH = (USART_BAUDRATE_115200 >> 8);
-	UCSRA |= (1<<U2X);
+	UBRR0L = USART_BAUDRATE_115200;
+	UBRR0H = (USART_BAUDRATE_115200 >> 8);
+	UCSR0A |= (1<<U2X0);
 
 	do
 	{
 		unsigned char	d = 0x00;
 		if (byte&1) d = 0xFF;
 		cli();
-		UDR = d;
-		UCSRA=(1<<TXC);
+		UDR0 = d;
+		UCSR0A=(1<<TXC0);
 		sei();
 		OthersTasks();
-		while(!CheckBit(UCSRA,RXC)) OthersTasks();
+		while(!CheckBit(UCSR0A,RXC0)) OthersTasks();
 		byte>>=1;
-		if (UDR>0xFE) byte|=128;
+		if (UDR0>0xFE) byte|=128;
 	}
 	while(--i);
 
