@@ -14,7 +14,7 @@
 //#include "onewire/delay.h"    // OW interface
 //#include "onewire/onewire.h"
 //#include "onewire/ds18x20.h"
-#include "sheduler/dispatch.h"          //aasdfasf
+#include "sheduler/dispatch.h"          //as
 #include "usart/usart.h"
 
 //#define TASCII(numb) (numb+48)
