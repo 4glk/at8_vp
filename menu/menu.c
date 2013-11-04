@@ -90,11 +90,13 @@ void SwitchMenu()
  //            USART_Print("Scroll Up");
 //             usartPrintOnewire();
             nlcd_PrintF(PSTR("SROLL_UP"));
+            temperatureRead();
 //            nlcd_PrintWide(current_temp);
             break;
         case BUTTON_SCROLL_DOWN:
  //           USART_Print("Scroll Down");
             nlcd_PrintF(PSTR("SCROLL_DOWN"));
+            temperatureStartConvert();
 //            usartDebug();
 //            printf("Debug USART");
             break;

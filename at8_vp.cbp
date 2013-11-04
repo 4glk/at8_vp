@@ -88,6 +88,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="onewire/onewire.h" />
+		<Unit filename="sensor.c">
+			<Option compilerVar="CC" />
+			<Option compile="0" />
+			<Option link="0" />
+			<Option compiler="avr-gcc" use="1" buildCommand="-std=c99 -mmcu=attiny13a" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="sensor.h" />
 		<Unit filename="sheduler/dispatch.c">
 			<Option compilerVar="CC" />
 		</Unit>

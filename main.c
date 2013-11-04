@@ -11,9 +11,9 @@
 //#include "menu/MicroMenu.h"
 //#include "menu/MenuConfig.h"
 #include "kbd/kbd.h"                // мои кнопки
-//#include "onewire/delay.h"    // OW interface
-//#include "onewire/onewire.h"
-//#include "onewire/ds18x20.h"
+#include "onewire/delay.h"    // OW interface
+#include "onewire/onewire.h"
+#include "onewire/ds18x20.h"
 #include "sheduler/dispatch.h"          //as
 #include "usart/usart.h"
 
@@ -56,12 +56,13 @@ int main(void)
 {
     timerDelayInit();
     USART_init();
+    usartDebug();
     InitScheduler();
     InitControl();
     nlcd_Init();
     MenuInit();
 
-    usartDebug();
+
     AddTask(KeyScan,50);
     AddTask(SwitchMenu,100);
     sei();
@@ -71,4 +72,5 @@ int main(void)
 
     return 0;
 }
+
 

@@ -43,7 +43,7 @@ void KeyScan(){
     flags.KeyReleased=0;
         if (++k >=2 ) {      //короткое нажатие 100-250 миллисекунд
             if (!flags.KeyPressed){flags.KeyPressed = 1;flags.KeyPin=(KEY_CODE);}
-               if ( k > 50 ){  //длинное нажатие 1-3 секунды
+               if ( k > 100 ){  //длинное нажатие 1-3 секунды
                  if (!flags.KeyPushLong){
                     k=0;                // проблема с этой переменной , конфликтует с енумом кнопок (((
                     flags.KeyPushLong=1;

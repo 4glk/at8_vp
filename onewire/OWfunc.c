@@ -45,6 +45,29 @@ void usartDebug(){
 
 }//*/
 
+void temperatureStartConvert(){
+        DS18x20_StartMeasure();
+        AddTask(temperatureRead,1000);
+}
+
+void temperatureRead(){
+    if (nDevices){
+        for (unsigned char i=0; i<nDevices; i++){
+            printf("\r"); print_address(owDevicesIDs[i]); // печатаем знак переноса строки, затем - адрес
+            printf(" - Thermometer DS18B20"); // печатаем тип устройства
+//            DS18x20_StartMeasureAddressed(owDevicesIDs[i]); // запускаем измерение
+//            timerDelayMs(800); // ждем минимум 750 мс, пока конвентируется температура
+            unsigned char	data[2]; // переменная для хранения старшего и младшего байта данных
+            DS18x20_ReadData(owDevicesIDs[i], data); // считываем данные
+            unsigned char	themperature[3]; // в этот массив будет записана температура
+            DS18x20_ConvertToThemperature(data, themperature); // преобразовываем температуру в человекопонятный вид
+            printf(": %d.%d C", themperature[1],themperature[2]);
+            current_temp=themperature[1];
+        }
+
+    }
+}
+
 //*
     void usartPrintOnewire(){
     	for (unsigned char i=0; i<nDevices; i++) // теперь сотируем устройства и запрашиваем данные

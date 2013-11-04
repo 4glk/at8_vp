@@ -27,6 +27,8 @@ extern void usartPrintOnewire();
 extern void nlcd_PrintF();
 extern void nlcd_GotoXY(char x,char y);
 extern void usartDebug();
+extern void temperatureRead();
+extern void temperatureStartConvert();
 
 //uint8_t current_temp=115;
 
