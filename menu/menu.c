@@ -4,7 +4,7 @@
 static void Level1Item1_Enter(void)
 {
 //	puts("ENTER");
-//    nlcd_PrintF(PSTR("ENTER_MENU_1_1"));
+    nlcd_PrintF(PSTR("ENTER_MENU_1_1"));
  //        USART_Print("Enter Menu 1 1");
 }
 
@@ -12,7 +12,7 @@ static void Level1Item1_Enter(void)
 static void Level1Item1_Select(void)
 {
 //	puts("SELECT");
-//    nlcd_PrintF(PSTR("SELECT_MENU_1_1"));
+    nlcd_PrintF(PSTR("SELECT_MENU_1_1"));
 //     USART_Print("Select Menu 1 1");
 //    nlcd_GotoXY(0,3);
 //	nlcd_SendByte(CMD_LCD_MODE,0xA7);
@@ -27,25 +27,25 @@ static void Generic_Write(const char* Text)
     if (Text);
         //puts_P(Text);
 //		nlcd_Print(Text);
- //       nlcd_PrintF(Text);
-        USART_Print(Text);
+        nlcd_PrintF(Text);
+//        USART_Print(Text);
 }
 //         Name      Next     Previous        Parent         Child     SelectFunc   EnterFunc  Text
-MENU_ITEM(Menu_1,   Menu_2,     Menu_3,     NULL_MENU,      Menu_1_1,PositionMenuesLevel1,Level1Item1_Enter,       "1 FIRE");
+MENU_ITEM(Menu_1,   Menu_2,     Menu_3,     NULL_MENU,      Menu_1_1,PositionMenuesLevel1,Level1Item1_Enter,"1 FIRE     ");
 MENU_ITEM(Menu_2,   Menu_3,     Menu_1,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "2 VAPORIZER");
-MENU_ITEM(Menu_3,   Menu_1,     Menu_2,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "3 PUMP");
+MENU_ITEM(Menu_3,   Menu_1,     Menu_2,     NULL_MENU,      NULL_MENU,PositionMenuesLevel1,   NULL,       "3 PUMP     ");
 
 MENU_ITEM(Menu_1_1, Menu_1_2,   Menu_1_2,   Menu_1,      NULL_MENU,PositionMenuesLevel2,   NULL,       "1.1        ");
 MENU_ITEM(Menu_1_2, Menu_1_1,   Menu_1_1,   Menu_1,      NULL_MENU,PositionMenuesLevel2,   NULL,       "1.2        ");
 
 void PositionMenuesLevel1()
 {
-//    nlcd_GotoXY(0,3);
+    nlcd_GotoXY(0,3);
 }
 
 void PositionMenuesLevel2()
 {
-//    nlcd_GotoXY(0,4);
+    nlcd_GotoXY(0,4);
 }
 
 void MenuInit()
@@ -83,29 +83,31 @@ void SwitchMenu()
             break;
         case BUTTON_ENTER:
  //           USART_Print("Onewire");
-            usartPrintOnewire();
+//            usartPrintOnewire();
             Menu_EnterCurrentItem();
             break;
         case BUTTON_SCROLL_UP:
  //            USART_Print("Scroll Up");
-             usartPrintOnewire();
-//            nlcd_PrintF(PSTR("SROLL_UP"));
+//             usartPrintOnewire();
+            nlcd_PrintF(PSTR("SROLL_UP"));
 //            nlcd_PrintWide(current_temp);
             break;
         case BUTTON_SCROLL_DOWN:
  //           USART_Print("Scroll Down");
- //           nlcd_PrintF(PSTR("SCROLL_DOWN"));
+            nlcd_PrintF(PSTR("SCROLL_DOWN"));
 //            usartDebug();
 //            printf("Debug USART");
             break;
         case BUTTON_FIRE:
   //           USART_Print("Fire");
- //           nlcd_PrintF(PSTR("FIRE_ENABLE"));
+            nlcd_PrintF(PSTR("FIRE_ENABLE"));
   //          USART0_write('F');
+              usartPrintOnewire();
             break;
         case BUTTON_PUMP:
  //            USART_Print("Pump");
-  //          nlcd_PrintF(PSTR("PUMP_ENABLE"));
+            nlcd_PrintF(PSTR("PUMP_ENABLE"));
+            usartDebug();
   //          USART0_write('P');
             break;
         default:

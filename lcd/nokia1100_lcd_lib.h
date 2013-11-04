@@ -35,8 +35,8 @@
 #define RST_LCD_PIN     0
 
 // Применять полный набор символов.
-//#define FULL_CHARSET
-
+#define FULL_CHARSET
+//#define VBUFFER
 // Применять русские символы
 //#define RUSCHAR
 // Применять строчные (маленькие) буквы
@@ -86,6 +86,7 @@
 #define NLCD_X_RES	96		// разрешение по горизонтали
 #define NLCD_Y_RES	68		// разрешение по вертикали
 
+#ifdef VBUFFER
 // Видеобуфер. Работаем через буффер, так как из контроллера NOKIA1100 читать данные нельзя, а для
 // графического режима нам нужно знать содержимое видеопамяти. (9 банков по 96 байт)
 static unsigned char nlcd_memory[NLCD_X_RES-1][(NLCD_Y_RES/8)+1];
@@ -93,7 +94,7 @@ static unsigned char nlcd_memory[NLCD_X_RES-1][(NLCD_Y_RES/8)+1];
 // Тукущие координаты (указатели) в видеобуфере
 // nlcd_xcurr - в пикселах, nlcd_ycurr- в банках (строках)
 static unsigned char nlcd_xcurr, nlcd_ycurr;
-
+#endif
 //******************************************************************************
 // Прототипы функций
 

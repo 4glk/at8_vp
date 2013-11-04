@@ -50,17 +50,17 @@ extern void MenuInit();
 extern void InitControl();
 extern void usartDebug();
 extern void timerDelayInit();
-//extern void nlcd_Init();
+extern void nlcd_Init();
 
 int main(void)
 {
+    timerDelayInit();
     USART_init();
     InitScheduler();
     InitControl();
- //   nlcd_Init();
+    nlcd_Init();
     MenuInit();
-    timerDelayInit();
-//    forMenuInit();
+
     usartDebug();
     AddTask(KeyScan,50);
     AddTask(SwitchMenu,100);

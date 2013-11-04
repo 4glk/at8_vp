@@ -16,7 +16,6 @@ void PositionMenuesLevel1();
 void PositionMenuesLevel2();
 void MenuInit();
 void SwitchMenu();
-void forMenuInit();
 extern uint8_t KeyCurrentCode;
 extern void USART0_write(unsigned char data);
 extern void USART_Print(const char *USART_String);
@@ -25,6 +24,9 @@ extern void USART_Print(const char *USART_String);
 //extern void nlcd_PrintWide();
 extern void AddTask (void (*taskfunc)(void), uint16_t taskdelay);
 extern void usartPrintOnewire();
+extern void nlcd_PrintF();
+extern void nlcd_GotoXY(char x,char y);
+extern void usartDebug();
 
 //uint8_t current_temp=115;
 

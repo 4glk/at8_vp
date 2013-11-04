@@ -85,9 +85,9 @@ void nlcd_Clear(void)
 	nlcd_SendByte(CMD_LCD_MODE,0xB0);
 	nlcd_SendByte(CMD_LCD_MODE,0x10); // X = 0
 	nlcd_SendByte(CMD_LCD_MODE,0x00);
-
+#ifdef VBUFFER
 	nlcd_xcurr=0; nlcd_ycurr=0;		  // Устанавливаем в 0 текущие координаты в видеобуфере
-
+#endif
 	//nlcd_SendByte(CMD_LCD_MODE,0xAE); // disable display;
 
 	for(unsigned int i=0;i<864;i++) nlcd_SendByte(DATA_LCD_MODE,0x00);
@@ -104,12 +104,16 @@ void nlcd_Clear(void)
 //  c: значение передаваемого байта
 void nlcd_SendByte(char mode,unsigned char c)
 {
- //   cli();
+    cli();
     CS_LCD_RESET;
     SCLK_LCD_RESET;
 
-	if (mode) 				// DATA_LCD_MODE
-	{
+	if (mode) {
+#ifndef VBUFFER                 // DATA_LCD_MODE
+                SDA_LCD_SET;
+#endif // VBUFFER
+
+#ifdef VBUFFER
 		nlcd_memory[nlcd_xcurr][nlcd_ycurr] = c;	// Записываем банные в видеобуфер
 
 		nlcd_xcurr++;								// Обновляем координаты в видеобуфере
@@ -123,7 +127,8 @@ void nlcd_SendByte(char mode,unsigned char c)
 		if (nlcd_ycurr>8) nlcd_ycurr = 0;
 
 
-		SDA_LCD_SET;								// Передача байта в LCD-контроллер
+		SDA_LCD_SET;
+#endif	//GRAPHICS					// Передача байта в LCD-контроллер
 	}
 	 else SDA_LCD_RESET;	// CMD_LCD_MODE
 
@@ -139,11 +144,11 @@ void nlcd_SendByte(char mode,unsigned char c)
         SCLK_LCD_SET;
         c <<= 1;
 
-//		_delay_us(NLCD_MIN_DELAY);	// *****!!!!! 34 - Минимальная задержка, при которой работает мой LCD-контроллер
+		_delay_us(NLCD_MIN_DELAY);	// *****!!!!! 34 - Минимальная задержка, при которой работает мой LCD-контроллер
     }
 
     CS_LCD_SET;
- //   sei();
+    sei();
 }
 
 //******************************************************************************
@@ -227,11 +232,12 @@ void nlcd_PrintF(unsigned char * message)
 //  y: 0..7
 void nlcd_GotoXY(char x,char y)
 {
-	x=x*6;	// Переходим от координаты в знакоместах к координатам в пикселях
 
+	x=x*6;	// Переходим от координаты в знакоместах к координатам в пикселях
+#ifdef VBUFFER
 	nlcd_xcurr=x;
 	nlcd_ycurr=y;
-
+#endif	//GRAPHICS
 	nlcd_SendByte(CMD_LCD_MODE,(0xB0|(y&0x0F)));      // установка адреса по Y: 0100 yyyy
     nlcd_SendByte(CMD_LCD_MODE,(0x00|(x&0x0F)));      // установка адреса по X: 0000 xxxx - биты (x3 x2 x1 x0)
     nlcd_SendByte(CMD_LCD_MODE,(0x10|((x>>4)&0x07))); // установка адреса по X: 0010 0xxx - биты (x6 x5 x4)
@@ -247,7 +253,7 @@ void nlcd_Inverse(unsigned char mode)
 	 else nlcd_SendByte(CMD_LCD_MODE,0xA7);
 }
 
-
+#ifdef VBUFFER
 //******************************************************************************
 // Устанавливает курсор в пикселях. Отсчет начинается в верхнем
 // левом углу. По горизонтали 96 пикселей, по вертикали - 65
@@ -255,6 +261,7 @@ void nlcd_Inverse(unsigned char mode)
 //  y: 0..64
 void nlcd_GotoXY_pix(char x,char y)
 {
+
 	nlcd_xcurr=x;
 	nlcd_ycurr=y/8;
 
@@ -262,7 +269,7 @@ void nlcd_GotoXY_pix(char x,char y)
     nlcd_SendByte(CMD_LCD_MODE,(0x00|(x&0x0F)));      // установка адреса по X: 0000 xxxx - биты (x3 x2 x1 x0)
     nlcd_SendByte(CMD_LCD_MODE,(0x10|((x>>4)&0x07))); // установка адреса по X: 0010 0xxx - биты (x6 x5 x4)
 }
-
+#endif
 #ifdef GRAPHICS
 //******************************************************************************
 // Вывод точки на LCD-экран NOKIA 1100
