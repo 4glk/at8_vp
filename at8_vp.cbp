@@ -50,6 +50,10 @@
 		<Unit filename="HAL.h" />
 		<Unit filename="at328_vp.DSN" />
 		<Unit filename="at8_vp.DSN" />
+		<Unit filename="burner/burner.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="burner/burner.h" />
 		<Unit filename="kbd/kbd.c">
 			<Option compilerVar="CC" />
 		</Unit>
