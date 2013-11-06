@@ -110,7 +110,7 @@ void SwitchMenu()
         case BUTTON_PUMP:
  //            USART_Print("Pump");
             nlcd_PrintF(PSTR("PUMP_ENABLE"));
-            usartDebug();
+            AddTask(pumpStart,100);
   //          USART0_write('P');
             break;
         default:

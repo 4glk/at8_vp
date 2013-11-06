@@ -92,5 +92,8 @@ void burnerStart();
 void burnerStop();
 void burnerCheck();
 void burnerWork();
+void pumpStart();
+void pumpCheck();
+void pumpStop();
 
 extern void AddTask (void (*taskfunc)(void), uint16_t taskdelay);

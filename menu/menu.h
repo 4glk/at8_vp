@@ -30,6 +30,7 @@ extern void usartDebug();
 extern void temperatureRead();
 extern void temperatureStartConvert();
 extern void burnerStart();
+extern void pumpStart();
 
 //uint8_t current_temp=115;
 
