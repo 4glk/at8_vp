@@ -103,8 +103,9 @@ void SwitchMenu()
         case BUTTON_FIRE:
   //           USART_Print("Fire");
             nlcd_PrintF(PSTR("FIRE_ENABLE"));
+            AddTask(burnerStart,50);
   //          USART0_write('F');
-              usartPrintOnewire();
+ //             usartPrintOnewire();
             break;
         case BUTTON_PUMP:
  //            USART_Print("Pump");

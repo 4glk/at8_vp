@@ -16,6 +16,7 @@
 #include "onewire/ds18x20.h"
 #include "sheduler/dispatch.h"          //as
 #include "usart/usart.h"
+#include "burner/burner.h"
 
 //#define TASCII(numb) (numb+48)
 //#define OW_BIT_OUT
@@ -51,6 +52,7 @@ extern void InitControl();
 extern void usartDebug();
 extern void timerDelayInit();
 extern void nlcd_Init();
+//extern void InitBurner();
 
 int main(void)
 {
@@ -61,8 +63,8 @@ int main(void)
     InitControl();
     nlcd_Init();
     MenuInit();
-
-
+    InitBurner();
+//    nlcd_PrintF(PSTR("HELLO"));
     AddTask(KeyScan,50);
     AddTask(SwitchMenu,100);
     sei();

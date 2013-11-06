@@ -32,11 +32,11 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-std=c99 -mmcu=atmega8" />
+			<Add option="-std=c99 -mmcu=atmega32" />
 			<Add option="-DF_CPU=8000000UL" />
 		</Compiler>
 		<Linker>
-			<Add option="-mmcu=atmega8" />
+			<Add option="-mmcu=atmega32" />
 			<Add option="-Wl,-Map=$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).map,--cref" />
 		</Linker>
 		<ExtraCommands>
@@ -63,6 +63,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="lcd/nokia1100_lcd_lib.h" />
+		<Unit filename="led/led.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="led/led.h" />
 		<Unit filename="macros.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
@@ -92,6 +96,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="onewire/onewire.h" />
+		<Unit filename="pin_macros.h" />
 		<Unit filename="sensor.c">
 			<Option compilerVar="CC" />
 			<Option compile="0" />
