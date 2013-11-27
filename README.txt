@@ -1,1 +1,1 @@
-Control countdown timer
+Vaporizer controller
