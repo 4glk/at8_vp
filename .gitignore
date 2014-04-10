@@ -1,0 +1,24 @@
+bin/**/*
+obj/**/*.*
+bin
+!bin/Debug/*.elf
+!bin/Release/*.hex
+doxygen/**/*
+!doxygen/*.chm
+*~
+*.DBK
+*.PWI
+*.layout
+*.depend
+*.dmp
+#*	
+# or next
+#**/*.*
+#!*.c
+#!*.h
+#!*.hex
+#!*.elf
+#!*.DSN
+#!*.LAY
+#!*.chm
+
