@@ -3,10 +3,10 @@
     // Initialization
 void InitBurner(){
 
-    DRIVER(PP_PUMP,OUT);
-    DRIVER(PS_LEVEL,IN);
-    DRIVER(PS_LEVEL,PULLUP);
-    DRIVER(BP_BLOW,OUT);
+    DRIVER(PP_PUMP,OUT);     // pp -powerpump
+    DRIVER(PS_LEVEL,IN);    // ps - pump sensor
+    DRIVER(PS_LEVEL,PULLUP);    //bp - burner power
+    DRIVER(BP_BLOW,OUT);        // bs - burner sensor
     DRIVER(BP_IGNITION,OUT);
     DRIVER(BP_VALVE,OUT);
     DRIVER(BS_PHOTO,IN);
@@ -17,7 +17,7 @@ void InitBurner(){
     DRIVER(BP_BUZZER,OUT);
 }
 
-// нужно больше функций общий старт , нужно чтобы розжиг не зажигался без топлива , а топливо не срабатывало без поддува
+// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ , пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ , пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 //
 
 void burnerStart(){
